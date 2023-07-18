@@ -12,13 +12,13 @@ public class Eventos {
 	
 	private String nomeEvento;
 	private LocalDateTime dataEvento;
-	private Integer quantidadeIngresso;
+	private int quantidadeIngresso;
 	private Endereco enderecoEvento;
 	
 	public Eventos() {}
 	
 	
-	public Eventos(String nomeEvento, LocalDateTime dataEvento, Integer quantiInteger, Endereco enderecoEvento) {
+	public Eventos(String nomeEvento, LocalDateTime dataEvento, int quantiInteger, Endereco enderecoEvento) {
 		this.setNomeEvento(nomeEvento);
 		this.setDataEvento(dataEvento);
 		this.setQuantidadeIngresso(quantiInteger);
@@ -44,11 +44,11 @@ public class Eventos {
 	}
 
 
-	public Integer getQuantidadeIngresso() {
+	public int getQuantidadeIngresso() {
 		return quantidadeIngresso;
 	}
 
-	public void setQuantidadeIngresso(Integer quantidadeIngresso) {
+	public void setQuantidadeIngresso(int quantidadeIngresso) {
 		this.quantidadeIngresso = quantidadeIngresso;
 	}
 	
@@ -72,6 +72,16 @@ public class Eventos {
 		DateTimeFormatter formatoDataHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		return dataHora.format(formatoDataHora);
 	}
-
-
+	
+	
+	public void imprimirIngresso() {
+		
+		System.out.println("Nome Evento: " + getNomeEvento());
+		System.out.println("Local Evento: " + converteDateTime(getDataEvento()));
+		System.out.println("Endereço: " + getEnderecoEvento().getLogradouro() + ", " + getEnderecoEvento().getBairro()
+				+ ", " + getEnderecoEvento().getLocalidade() + ", " + getEnderecoEvento().getUf());
+		
+	}
+	
+	
 }
