@@ -15,7 +15,7 @@ public class Main {
 		String cepCadastro = "52211058";
 
 		LocalDateTime localTime = LocalDateTime.parse("2023-07-21T18:45");
-		int ingressos1 = 10;
+		int ingressos1 = 0;
 				
 		ViacepService viaCep = new ViacepService();
 		
@@ -36,14 +36,14 @@ public class Main {
 			Eventos evento = new Eventos(nome, localTime, ingressos1, viaCep.getEndereco(cepCadastro));
 			Eventos evento2 = new Eventos(nome2, localTime2, ingressos2, viaCep2.getEndereco(cepCadastro2));
 
-			evento.comprarIngresso();
-			System.out.println("-----------");
-			evento2.comprarIngresso();
+			System.out.println(evento.comprarIngresso());
+//			System.out.println("-----------");
+//			evento2.comprarIngresso();
 			System.out.println("\n* ------ Relatório de Ingressos ------ *\n");
 			evento.exibirIngresso();
-			System.out.println("");
-			evento2.exibirIngresso();
-		
+//			System.out.println("");
+//			evento2.exibirIngresso();
+//		
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

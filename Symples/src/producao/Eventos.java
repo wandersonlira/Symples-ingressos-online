@@ -16,6 +16,7 @@ public class Eventos {
 	private int quantidadeIngresso;
 	private Endereco enderecoEvento;
 	private Ingressos ingresso;
+	int cont = 0;
 	
 	public Eventos() {}
 	
@@ -42,24 +43,36 @@ public class Eventos {
 
 	
 	public void exibirIngresso() {
-	
-		System.out.println("Nome Evento: " + this.getNomeEvento());
-		System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
-		System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
-				+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
-		System.out.println("Participante: " + ingresso.getParticipante().getNomePessoa());
 		
+		
+		if (comprarIngresso() == true) {
+	
+			System.out.println("Nome Evento: " + this.getNomeEvento());
+			System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
+			System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
+					+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
+			System.out.println("Participante: " + this.ingresso.getParticipante().getNomePessoa());
+		
+		} else {
+			System.out.println("Não há ingressos comprados");
+		}
 	}
 	
 	
-	public void comprarIngresso() {
+	public boolean comprarIngresso() {
+		
 		if (this.quantidadeIngresso > 0) {
 			setIngresso(ingresso = new Ingressos());
 			this.ingresso.cadastrarIngresso();
-			this.quantidadeIngresso--;
+			this.quantidadeIngresso--;	
+//			this.cont++;
+			return true;
+			
 		} else {
 			System.out.println(" --- INGRESSO ESGOTADO! --- ");
+			return false;
 		}
+
 	}
 
 	
