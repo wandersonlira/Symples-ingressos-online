@@ -7,6 +7,22 @@ public class Cadastro {
 	private String nomePessoa;
 	private String cpfPessoa;
 	private String email;
+
+	
+	public void cadastrar() {
+		
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		
+		System.out.print("Nome: ");
+		setNomePessoa(nomePessoa = input.nextLine());
+		System.out.print("CPF: ");
+		setCpfPessoa(cpfPessoa = input.nextLine());
+		System.out.print("E-mail: ");
+		setEmail(email = input.nextLine());
+		
+		
+	}
 	
 	
 	public String getNomePessoa() {
@@ -28,19 +44,5 @@ public class Cadastro {
 		this.email = email;
 	}
 
-	
-	public void cadastrar() {
-		
-		Scanner input = new Scanner(System.in);
-		
-		System.out.print("Nome: ");
-		setNomePessoa(nomePessoa = input.nextLine());
-		System.out.print("CPF: ");
-		setCpfPessoa(cpfPessoa = input.nextLine());
-		System.out.print("E-mail: ");
-		setEmail(email = input.nextLine());
-		
-		input.close();
-	}
 	
 }
