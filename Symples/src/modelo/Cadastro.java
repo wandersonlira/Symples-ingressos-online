@@ -45,11 +45,9 @@ public class Cadastro {
 		this.email = email;
 	}
 
-
 	public LocalDateTime getTimeLocalIngresso() {
 		return timeLocalIngresso;
 	}
-
 
 	public void setTimeLocalIngresso(LocalDateTime timeLocalIngresso) {
 		this.timeLocalIngresso = timeLocalIngresso;

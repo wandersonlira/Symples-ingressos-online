@@ -15,17 +15,19 @@ public class Eventos {
 	private LocalDateTime dataEvento;
 	private int quantidadeIngresso;
 	private Endereco enderecoEvento;
-	private Ingressos ingresso;
+	private Ingressos[] ingresso;
 	private boolean boleano = false;
+	private int cont = 0;
 	
 	public Eventos() {}
 	
-	
+
 	public Eventos(String nomeEvento, LocalDateTime dataEvento, int quantiInteger, Endereco enderecoEvento) {
 		this.setNomeEvento(nomeEvento);
 		this.setDataEvento(dataEvento);
 		this.setQuantidadeIngresso(quantiInteger);
 		this.setEnderecoEvento(enderecoEvento);
+		this.ingresso = new Ingressos[this.quantidadeIngresso];
 	}
 	
 	
@@ -50,12 +52,19 @@ public class Eventos {
 		
 		else if (this.boleano == true) {
 	
-			System.out.println("Nome Evento: " + this.getNomeEvento());
-			System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
-			System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
-					+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
-			System.out.println("Participante: " + this.ingresso.getParticipante().getNomePessoa());	
-			System.out.println("Comprado: " + this.ingresso.registroCadastro());
+			for (int i=0; i<ingresso.length; i++) {
+				if (ingresso[i] != null) {
+				System.out.println("Nome Evento: " + this.getNomeEvento());
+				System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
+				System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
+						+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
+				System.out.println("Participante: " + this.ingresso[i].getParticipante().getNomePessoa());	
+				System.out.println("Comprado dia: " + converteDateTime(this.ingresso[i].registroCadastro()));
+				System.out.println("");
+				} else {
+					System.out.println("Ingresso nº" + i + " - Disponível");
+					}
+			}
 		}
 		
 	}
@@ -64,9 +73,11 @@ public class Eventos {
 	public void comprarIngresso() {
 		
 		if (this.quantidadeIngresso > 0) {
-			setIngresso(ingresso = new Ingressos());
-			this.ingresso.cadastrarIngresso();
-			this.quantidadeIngresso--;	
+			this.ingresso[this.cont] = new Ingressos();
+			this.ingresso[this.cont].cadastrarIngresso();
+			this.cont++;
+			this.quantidadeIngresso--;
+
 			this.boleano = true;
 			
 		} else {
@@ -111,11 +122,11 @@ public class Eventos {
 	}
 
 	
-	public Ingressos getIngresso() {
+	public Ingressos[] getIngresso() {
 		return ingresso;
 	}
 
-	public void setIngresso(Ingressos ingresso) {
+	public void setIngresso(Ingressos[] ingresso) {
 		this.ingresso = ingresso;
 	}
 }
