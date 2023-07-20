@@ -1,5 +1,6 @@
 package modelo;
 
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Cadastro {
@@ -7,6 +8,7 @@ public class Cadastro {
 	private String nomePessoa;
 	private String cpfPessoa;
 	private String email;
+	private LocalDateTime timeLocalIngresso;
 
 	
 	public void cadastrar() {
@@ -20,8 +22,7 @@ public class Cadastro {
 		setCpfPessoa(cpfPessoa = input.nextLine());
 		System.out.print("E-mail: ");
 		setEmail(email = input.nextLine());
-		
-		
+		this.timeLocalIngresso = LocalDateTime.now();
 	}
 	
 	
@@ -42,6 +43,16 @@ public class Cadastro {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+
+	public LocalDateTime getTimeLocalIngresso() {
+		return timeLocalIngresso;
+	}
+
+
+	public void setTimeLocalIngresso(LocalDateTime timeLocalIngresso) {
+		this.timeLocalIngresso = timeLocalIngresso;
 	}
 
 	

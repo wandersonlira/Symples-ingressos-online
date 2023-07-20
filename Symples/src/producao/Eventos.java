@@ -55,6 +55,7 @@ public class Eventos {
 			System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
 					+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
 			System.out.println("Participante: " + this.ingresso.getParticipante().getNomePessoa());	
+			System.out.println("Comprado: " + this.ingresso.registroCadastro());
 		}
 		
 	}
