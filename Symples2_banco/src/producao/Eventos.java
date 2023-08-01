@@ -2,11 +2,19 @@ package producao;
 
 import modelo.Endereco;
 import modelo.Ingressos;
+import service.DbConexao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 
 public class Eventos {
@@ -28,6 +36,63 @@ public class Eventos {
 		this.setQuantidadeIngresso(quantiInteger);
 		this.setEnderecoEvento(enderecoEvento);
 		this.ingresso = new Ingressos[this.quantidadeIngresso];
+	}
+	
+	
+	public void cadastraEvento() {
+		
+		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
+		Connection conexao = null;
+		PreparedStatement formaTabela = null;
+		
+		try {
+			conexao = DbConexao.getConexao();
+			
+			formaTabela = conexao.prepareStatement(
+					"INSERT INTO eventos"
+					+ "(Nome_evento, Data_evento, Hora_evento, Qtd_ingresso)"
+					+ "VALUES"
+					+ "(?, ?, ? ,?)", Statement.RETURN_GENERATED_KEYS);
+			
+			@SuppressWarnings("resource")
+			Scanner input = new Scanner(System.in);
+			
+			System.out.print("Nome: ");
+			formaTabela.setString(1, input.nextLine());
+			
+			System.out.print("Data: ");
+			formaTabela.setDate(2, new java.sql.Date(formatoDate.parse(input.nextLine()).getTime()));
+			
+			System.out.print("Hora: ");
+			formaTabela.setString(3, input.nextLine());
+			
+			System.out.print("Quantidade de ingressos: ");
+			formaTabela.setInt(4, input.nextInt());
+			
+			int linhaModificada = formaTabela.executeUpdate();
+			
+			if (linhaModificada > 0) {
+				
+				ResultSet rs = formaTabela.getGeneratedKeys();
+				
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					System.out.println("Done! ID = " + id);
+				}
+				
+			} else {
+					System.out.println("No rown affected!");
+				}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (java.text.ParseException e) { // referente ao tipo Date usado em Data
+			e.printStackTrace();
+		} finally {
+			DbConexao.closeResultSet(null);
+			DbConexao.closeStatement(formaTabela);
+			DbConexao.closeConexao();
+		}
 	}
 	
 	

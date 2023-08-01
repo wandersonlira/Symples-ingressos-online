@@ -12,9 +12,6 @@ import service.DbConexao;
 
 public class Cadastro {
 	
-//	private String nomePessoa;
-//	private String cpfPessoa;
-//	private String email;
 	private LocalDateTime timeLocalIngresso;
 
 	
@@ -74,25 +71,6 @@ public class Cadastro {
 	}
 	
 	
-//	public String getNomePessoa() {
-//		return nomePessoa;
-//	}
-//	public void setNomePessoa(String nomePessoa) {
-//		this.nomePessoa = nomePessoa;
-//	}
-//	public String getCpfPessoa() {
-//		return cpfPessoa;
-//	}
-//	public void setCpfPessoa(String cpfPessoa) {
-//		this.cpfPessoa = cpfPessoa;
-//	}
-//	public String getEmail() {
-//		return email;
-//	}
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-
 	public LocalDateTime getTimeLocalIngresso() {
 		return timeLocalIngresso;
 	}

@@ -10,31 +10,32 @@ public class Main {
 	public static void main(String[] args) {
 		
 		
-		String nome = "FIG - Festival de Inverno de Garanhuns";
-
-		String cepCadastro = "52211058";
-
-		LocalDateTime localTime = LocalDateTime.parse("2023-07-21T18:45");
-		int ingressos1 = 30;
-				
-		ViacepService viaCep = new ViacepService();
+//		String nome = "FIG - Festival de Inverno de Garanhuns";
+//
+//		String cepCadastro = "52211058";
+//
+//		LocalDateTime localTime = LocalDateTime.parse("2023-07-21T18:45");
+//		
+//		int ingressos1 = 30;
+//				
+//		ViacepService viaCep = new ViacepService();
 		
 //		------------------------ EVENTO 2 ---------------------------------
 		
-		String nome2 = "CINEPORTO";
-
-		String cepCadastro2 = "01001000";
-
-		LocalDateTime localTime2 = LocalDateTime.parse("2023-07-21T18:45");
-		int ingressos2 = 20;
-				
-		ViacepService viaCep2 = new ViacepService();
+//		String nome2 = "CINEPORTO";
+//
+//		String cepCadastro2 = "01001000";
+//
+//		LocalDateTime localTime2 = LocalDateTime.parse("2023-07-21T18:45");
+//		int ingressos2 = 20;
+//				
+//		ViacepService viaCep2 = new ViacepService();
 		
 		
-		try {
-			
-			Eventos evento = new Eventos(nome, localTime, ingressos1, viaCep.getEndereco(cepCadastro));
-			Eventos evento2 = new Eventos(nome2, localTime2, ingressos2, viaCep2.getEndereco(cepCadastro2));
+//		try {
+//			
+//			Eventos evento = new Eventos(nome, localTime, ingressos1, viaCep.getEndereco(cepCadastro));
+//			Eventos evento2 = new Eventos(nome2, localTime2, ingressos2, viaCep2.getEndereco(cepCadastro2));
 
 //			for (int i=0; i<1; i++) {
 //				evento.comprarIngresso(); 
@@ -44,18 +45,21 @@ public class Main {
 //			System.out.println("-----------");
 //			evento.comprarIngresso(); 
 //			evento2.comprarIngresso();
-			System.out.println("\n* ------ Relatório de Ingressos ------ *\n");
+//			System.out.println("\n* ------ Relatório de Ingressos ------ *\n");
 //			evento.exibirIngresso();
-			System.out.println("");
+//			System.out.println("");
 //			evento2.exibirIngresso();
 //		
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		
+		Eventos evento = new Eventos();
+		
+		evento.cadastraEvento();
 	}
 
 }
