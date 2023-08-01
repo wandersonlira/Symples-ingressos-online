@@ -3,7 +3,9 @@ package producao;
 import modelo.Endereco;
 import modelo.Ingressos;
 import service.DbConexao;
+import service.ViacepService;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +18,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import org.apache.http.client.ClientProtocolException;
 
-public class Eventos {
+
+public class Eventos extends ViacepService{
 	
 	private String nomeEvento;
 	private LocalDateTime dataEvento;
@@ -39,16 +43,24 @@ public class Eventos {
 	}
 	
 	
+	
+	public void criarEvento() {
+		cadastraEvento();
+		cadastraEndereco();
+	}
+	
+	
 	public void cadastraEvento() {
 		
 		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
-		Connection conexao = null;
-		PreparedStatement formaTabela = null;
+		Connection conexaoDataBase = null;
+		PreparedStatement consultaDataBase = null;
+		ResultSet resultadoConsulta = null;
 		
 		try {
-			conexao = DbConexao.getConexao();
+			conexaoDataBase = DbConexao.getConexao();
 			
-			formaTabela = conexao.prepareStatement(
+			consultaDataBase = conexaoDataBase.prepareStatement(
 					"INSERT INTO eventos"
 					+ "(Nome_evento, Data_evento, Hora_evento, Qtd_ingresso)"
 					+ "VALUES"
@@ -58,25 +70,25 @@ public class Eventos {
 			Scanner input = new Scanner(System.in);
 			
 			System.out.print("Nome: ");
-			formaTabela.setString(1, input.nextLine());
+			consultaDataBase.setString(1, input.nextLine());
 			
 			System.out.print("Data: ");
-			formaTabela.setDate(2, new java.sql.Date(formatoDate.parse(input.nextLine()).getTime()));
+			consultaDataBase.setDate(2, new java.sql.Date(formatoDate.parse(input.nextLine()).getTime()));
 			
 			System.out.print("Hora: ");
-			formaTabela.setString(3, input.nextLine());
+			consultaDataBase.setString(3, input.nextLine());
 			
 			System.out.print("Quantidade de ingressos: ");
-			formaTabela.setInt(4, input.nextInt());
+			consultaDataBase.setInt(4, input.nextInt());	
 			
-			int linhaModificada = formaTabela.executeUpdate();
+			int linhaModificada = consultaDataBase.executeUpdate();
 			
 			if (linhaModificada > 0) {
 				
-				ResultSet rs = formaTabela.getGeneratedKeys();
+				resultadoConsulta = consultaDataBase.getGeneratedKeys();
 				
-				while (rs.next()) {
-					int id = rs.getInt(1);
+				while (resultadoConsulta.next()) {
+					int id = resultadoConsulta.getInt(1);
 					System.out.println("Done! ID = " + id);
 				}
 				
@@ -89,10 +101,33 @@ public class Eventos {
 		} catch (java.text.ParseException e) { // referente ao tipo Date usado em Data
 			e.printStackTrace();
 		} finally {
-			DbConexao.closeResultSet(null);
-			DbConexao.closeStatement(formaTabela);
+			DbConexao.closeResultSet(resultadoConsulta);
+			DbConexao.closeStatement(consultaDataBase);
 			DbConexao.closeConexao();
 		}
+	}
+	
+	
+	
+	public void cadastraEndereco() {
+		
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		
+		System.out.println("CEP: ");
+		String cepCadastro = input.nextLine();
+		
+		try {
+			this.enderecoEvento = getEndereco(cepCadastro);
+			
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+		}
+		
 	}
 	
 	
@@ -194,4 +229,10 @@ public class Eventos {
 	public void setIngresso(Ingressos[] ingresso) {
 		this.ingresso = ingresso;
 	}
+
+	public static void main(String[] args) {
+		Eventos evento = new Eventos();
+		evento.cadastraEndereco();
+	}
+	
 }

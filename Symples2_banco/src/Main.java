@@ -56,10 +56,12 @@ public class Main {
 //			e.printStackTrace();
 //		}
 
-		
 		Eventos evento = new Eventos();
+		for (int i=0; i<1; i++) {
+			evento.comprarIngresso(); 
+			System.out.println("-----------");
+		}
 		
-		evento.cadastraEvento();
 	}
 
 }

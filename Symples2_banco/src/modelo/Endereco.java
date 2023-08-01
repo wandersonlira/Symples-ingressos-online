@@ -1,6 +1,7 @@
 package modelo;
 
-public class Endereco {
+
+public class Endereco{
 	
 	  private String cep;
 	  private String logradouro;
@@ -12,6 +13,12 @@ public class Endereco {
 	  private String gia;
 	  private String ddd;
 	  private String siafi;
+	  
+	  
+	  public void pegaEndereco() {
+		  
+	  }
+	  
 	  
 	  
 	public String getCep() {
