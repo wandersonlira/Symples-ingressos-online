@@ -36,16 +36,16 @@ public class Main {
 			Eventos evento = new Eventos(nome, localTime, ingressos1, viaCep.getEndereco(cepCadastro));
 			Eventos evento2 = new Eventos(nome2, localTime2, ingressos2, viaCep2.getEndereco(cepCadastro2));
 
-			for (int i=0; i<5; i++) {
-				evento.comprarIngresso(); 
-				System.out.println("-----------");
-			}
+//			for (int i=0; i<1; i++) {
+//				evento.comprarIngresso(); 
+//				System.out.println("-----------");
+//			}
 //			evento.comprarIngresso(); 
 //			System.out.println("-----------");
 //			evento.comprarIngresso(); 
 //			evento2.comprarIngresso();
 			System.out.println("\n* ------ Relatório de Ingressos ------ *\n");
-			evento.exibirIngresso();
+//			evento.exibirIngresso();
 			System.out.println("");
 //			evento2.exibirIngresso();
 //		
