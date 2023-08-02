@@ -58,7 +58,7 @@ public class Main {
 
 		Eventos evento = new Eventos();
 		for (int i=0; i<1; i++) {
-			evento.comprarIngresso(); 
+			evento.comprarIngresso();
 			System.out.println("-----------");
 		}
 		

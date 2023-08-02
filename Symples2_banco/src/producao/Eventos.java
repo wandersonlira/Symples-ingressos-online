@@ -50,7 +50,7 @@ public class Eventos extends ViacepService{
 	}
 	
 	
-	public void cadastraEvento() {
+	private void cadastraEvento() {
 		
 		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
 		Connection conexaoDataBase = null;
@@ -109,23 +109,26 @@ public class Eventos extends ViacepService{
 	
 	
 	
-	public void cadastraEndereco() {
+	private void cadastraEndereco() {
 		
-		@SuppressWarnings("resource")
-		Scanner input = new Scanner(System.in);
-		
-		System.out.println("CEP: ");
-		String cepCadastro = input.nextLine();
-		
-		try {
-			this.enderecoEvento = getEndereco(cepCadastro);
+
+		try (Scanner input = new Scanner(System.in)) {
+			System.out.print("CEP: ");
+			String cepCadastro = input.nextLine();
 			
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			
+			try {
+				this.enderecoEvento = getEndereco(cepCadastro);
+				this.enderecoEvento.insertEndereco();
+				
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				
+			} finally {
+				input.close();
+			}
 		}
 		
 	}
@@ -142,7 +145,42 @@ public class Eventos extends ViacepService{
 		DateTimeFormatter formatoDataHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		return dataHora.format(formatoDataHora);
 	}
+	
+	
+	
+	public void exibirEventos() {
+		
+		Connection conexaoDatabase = null;
+		Statement consultaDataBase = null;
+		ResultSet resultadoConsulta = null;		
+		
+		try {
+			conexaoDatabase = DbConexao.getConexao();
+			consultaDataBase = conexaoDatabase.createStatement();
+			
+			resultadoConsulta = consultaDataBase.executeQuery(
+					"SELECT eventos.Nome_evento, eventos.Data_evento, eventos.Hora_evento, eventos.Qtd_ingresso"
+					+ "	FROM eventos"
+					+ "		WHERE eventos.Data_evento >= '2023-08-02' ");
+			
+			while (resultadoConsulta.next()) {
+				System.out.println("Nome: " + resultadoConsulta.getString("Nome_evento")
+				+ "\nData: " + resultadoConsulta.getString("Data_evento")
+				+ "\nHora: " + resultadoConsulta.getString("Hora_evento"));
+				System.out.println("-----------");
 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			DbConexao.closeResultSet(resultadoConsulta);
+			DbConexao.closeStatement(consultaDataBase);
+			DbConexao.closeConexao();
+		}
+	}
+
+	
 	
 	public void exibirIngresso() {
 		
@@ -158,7 +196,7 @@ public class Eventos extends ViacepService{
 				System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
 				System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
 						+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
-				this.ingresso[i].pegaParticipante();
+				this.ingresso[i].selectParticipante();
 				System.out.println("Comprado dia: " + converteDateTime(this.ingresso[i].registroCadastro()));
 				System.out.println("");
 				} else {
@@ -168,6 +206,7 @@ public class Eventos extends ViacepService{
 		}
 		
 	}
+	
 	
 	
 	public void comprarIngresso() {
@@ -232,7 +271,7 @@ public class Eventos extends ViacepService{
 
 	public static void main(String[] args) {
 		Eventos evento = new Eventos();
-		evento.cadastraEndereco();
+		evento.exibirEventos();
 	}
 	
 }

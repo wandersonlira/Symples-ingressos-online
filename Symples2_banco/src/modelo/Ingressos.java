@@ -17,12 +17,9 @@ public class Ingressos{
 
 	
 	public void cadastrarIngresso() {
-//		setParticipante(participante = new Cadastro());
-//		getParticipante().cadastraParticipante();
-		cadastraParticipante();
+		insertParticipante();
 		
 	}	
-	
 	
 	
 	public LocalDateTime registroCadastro() {
@@ -32,7 +29,7 @@ public class Ingressos{
 
 	
 	
-	private void cadastraParticipante() {
+	private void insertParticipante() {
 		
 		Connection conexaoDataBase = null;
 		PreparedStatement consultaDataBase = null;
@@ -91,15 +88,16 @@ public class Ingressos{
 	
 	
 	
-	public void pegaParticipante() {
+	public void selectParticipante() {
 		Connection conexaoDataBase = null;
 		Statement consultaDataBase = null;
 		ResultSet resultadoConsulta = null;
 		
-		conexaoDataBase = DbConexao.getConexao();
-		
 		try {
+			conexaoDataBase = DbConexao.getConexao();
+			
 			consultaDataBase = conexaoDataBase.createStatement();
+			
 			resultadoConsulta = consultaDataBase.executeQuery("SELECT * FROM participantes");
 			
 			while (resultadoConsulta.next()) {

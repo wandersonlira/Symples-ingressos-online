@@ -1,5 +1,13 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+
+import service.DbConexao;
 
 public class Endereco{
 	
@@ -14,8 +22,60 @@ public class Endereco{
 	  private String ddd;
 	  private String siafi;
 	  
+	
 	  
-	  public void pegaEndereco() {
+	  public void insertEndereco() {
+		  
+		  try (Scanner input = new Scanner(System.in)) {
+			  Connection conexaoDataBase = null;
+			  PreparedStatement consultaDataBases = null;
+			  ResultSet resultadoConsulta = null;
+			  
+			  try {
+				  
+				conexaoDataBase = DbConexao.getConexao();
+				
+				consultaDataBases = conexaoDataBase.prepareStatement(
+						  "INSERT INTO endereco"
+						  +"(Logradouro, Num_casa, Complemento, Bairro, Localidade, Uf, Cep, Ibge, Gia, Ddd, Siafi)"
+						  + "VALUES"
+						  + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				
+				consultaDataBases.setString(1, this.logradouro);
+				System.out.println("Num_Casa: ");
+				consultaDataBases.setString(2, input.nextLine());
+				consultaDataBases.setString(3, this.complemento);
+				consultaDataBases.setString(4, this.bairro);
+				consultaDataBases.setString(5, this.localidade);
+				consultaDataBases.setString(6, this.uf);
+				consultaDataBases.setString(7, this.cep);
+				consultaDataBases.setString(8, this.ibge);
+				consultaDataBases.setString(9, this.gia);
+				consultaDataBases.setString(10, this.ddd);
+				consultaDataBases.setString(11, this.siafi);
+				
+				int linhasAlteradas = consultaDataBases.executeUpdate();
+				
+				if (linhasAlteradas > 0) {
+					resultadoConsulta = consultaDataBases.getGeneratedKeys();
+					
+					while (resultadoConsulta.next()) {
+						int id = resultadoConsulta.getInt(1);
+						System.out.println("Done! ID = " + id);
+					}
+				} else {
+					System.out.println("No rows affected!");
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				
+			} finally {
+				DbConexao.closeResultSet(resultadoConsulta);
+				DbConexao.closeStatement(consultaDataBases);
+				DbConexao.closeConexao();
+			}
+		}
 		  
 	  }
 	  
