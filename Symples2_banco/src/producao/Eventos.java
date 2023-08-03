@@ -160,8 +160,9 @@ public class Eventos extends ViacepService{
 			
 			resultadoConsulta = consultaDataBase.executeQuery(
 					"SELECT eventos.Nome_evento, eventos.Data_evento, eventos.Hora_evento, eventos.Qtd_ingresso"
-					+ "	FROM eventos"
-					+ "		WHERE eventos.Data_evento >= '2023-08-02' ");
+					+ "FROM eventos"
+					+ "		WHERE eventos.Data_evento >= curdate()"
+					+ 			"AND eventos.Hora_evento >= curtime()");
 			
 			while (resultadoConsulta.next()) {
 				System.out.println("Nome: " + resultadoConsulta.getString("Nome_evento")

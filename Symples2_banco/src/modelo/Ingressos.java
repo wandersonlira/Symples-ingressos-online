@@ -22,13 +22,6 @@ public class Ingressos{
 	}	
 	
 	
-	public LocalDateTime registroCadastro() {
-//		return getParticipante().getTimeLocalIngresso();
-		return null;
-	}
-
-	
-	
 	private void insertParticipante() {
 		
 		Connection conexaoDataBase = null;
@@ -85,9 +78,8 @@ public class Ingressos{
 			}
 		
 	}
-	
-	
-	
+
+
 	public void selectParticipante() {
 		Connection conexaoDataBase = null;
 		Statement consultaDataBase = null;
@@ -114,7 +106,13 @@ public class Ingressos{
 			}
 				
 	}
-	
+
+
+	public LocalDateTime registroCadastro() {
+//		return getParticipante().getTimeLocalIngresso();
+		return null;
+	}
+
 	
 	
 	public LocalDateTime getTimeLocalIngresso() {
@@ -132,6 +130,11 @@ public class Ingressos{
 
 	public void setParticipante(Cadastro participante) {
 		this.participante = participante;
+	}
+	
+	public static void main(String[] args) {
+		Ingressos in = new Ingressos();
+		in.selectParticipante();
 	}
 	
 	
