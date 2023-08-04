@@ -24,7 +24,9 @@ public class Endereco{
 	  
 	
 	  
-	  public void insertEndereco() {
+	  public Integer insertEndereco() {
+		  
+		  Integer idEndereco = null;
 		  
 		  try (Scanner input = new Scanner(System.in)) {
 			  Connection conexaoDataBase = null;
@@ -42,8 +44,7 @@ public class Endereco{
 						  + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				
 				consultaDataBases.setString(1, this.logradouro);
-				System.out.println("Num_Casa: ");
-				consultaDataBases.setString(2, input.nextLine());
+				System.out.print("Num_Casa: "); consultaDataBases.setString(2, input.nextLine());
 				consultaDataBases.setString(3, this.complemento);
 				consultaDataBases.setString(4, this.bairro);
 				consultaDataBases.setString(5, this.localidade);
@@ -60,8 +61,8 @@ public class Endereco{
 					resultadoConsulta = consultaDataBases.getGeneratedKeys();
 					
 					while (resultadoConsulta.next()) {
-						int id = resultadoConsulta.getInt(1);
-						System.out.println("Done! ID = " + id);
+						idEndereco = resultadoConsulta.getInt(1);
+						System.out.println("Done! ID = " + idEndereco);
 					}
 				} else {
 					System.out.println("No rows affected!");
@@ -76,6 +77,8 @@ public class Endereco{
 				DbConexao.closeConexao();
 			}
 		}
+		  
+		 return idEndereco;
 		  
 	  }
 	  

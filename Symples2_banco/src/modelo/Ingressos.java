@@ -33,10 +33,10 @@ public class Ingressos{
 			conexaoDataBase = DbConexao.getConexao();
 			
 			consultaDataBase = conexaoDataBase.prepareStatement(
-					"INSERT INTO participantes" 
-					+ "(Nome_participante, Cpf, Email)"
-					+ "VALUES"
-					+ "(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					"INSERT INTO participantes " 
+					+ "(Nome_participante, Cpf, Email) "
+					+ 	"VALUES "
+					+ 		"(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			
 			@SuppressWarnings("resource")

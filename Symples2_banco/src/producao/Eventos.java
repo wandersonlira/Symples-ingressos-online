@@ -45,12 +45,13 @@ public class Eventos extends ViacepService{
 	
 	
 	public void criarEvento() {
-		cadastraEvento();
-		cadastraEndereco();
+
 	}
 	
 	
-	private void cadastraEvento() {
+	private Integer insertEvento() {
+		
+		Integer id = null;
 		
 		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
 		Connection conexaoDataBase = null;
@@ -61,10 +62,10 @@ public class Eventos extends ViacepService{
 			conexaoDataBase = DbConexao.getConexao();
 			
 			consultaDataBase = conexaoDataBase.prepareStatement(
-					"INSERT INTO eventos"
-					+ "(Nome_evento, Data_evento, Hora_evento, Qtd_ingresso)"
-					+ "VALUES"
-					+ "(?, ?, ? ,?)", Statement.RETURN_GENERATED_KEYS);
+					"INSERT INTO eventos "
+					+ "(Nome_evento, Data_evento, Hora_evento, Qtd_ingresso) "
+					+ 	"VALUES "
+					+ 		"(?, ?, ? ,?)", Statement.RETURN_GENERATED_KEYS);
 			
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
@@ -88,8 +89,9 @@ public class Eventos extends ViacepService{
 				resultadoConsulta = consultaDataBase.getGeneratedKeys();
 				
 				while (resultadoConsulta.next()) {
-					int id = resultadoConsulta.getInt(1);
+					id = resultadoConsulta.getInt(1);
 					System.out.println("Done! ID = " + id);
+					
 				}
 				
 			} else {
@@ -105,12 +107,15 @@ public class Eventos extends ViacepService{
 			DbConexao.closeStatement(consultaDataBase);
 			DbConexao.closeConexao();
 		}
+		return id;
+		
 	}
 	
 	
 	
-	private void cadastraEndereco() {
+	private Integer cadastraEndereco() {
 		
+		Integer idEndereco = null;
 
 		try (Scanner input = new Scanner(System.in)) {
 			System.out.print("CEP: ");
@@ -118,7 +123,7 @@ public class Eventos extends ViacepService{
 			
 			try {
 				this.enderecoEvento = getEndereco(cepCadastro);
-				this.enderecoEvento.insertEndereco();
+				idEndereco = this.enderecoEvento.insertEndereco();
 				
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -130,6 +135,15 @@ public class Eventos extends ViacepService{
 				input.close();
 			}
 		}
+		
+		return idEndereco;	
+	}
+	
+	
+	private void cadastraEvento() {
+		Integer idEvento = insertEvento();
+		Integer idEndereco = cadastraEndereco();
+
 		
 	}
 	
@@ -159,13 +173,15 @@ public class Eventos extends ViacepService{
 			consultaDataBase = conexaoDatabase.createStatement();
 			
 			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT eventos.Nome_evento, eventos.Data_evento, eventos.Hora_evento, eventos.Qtd_ingresso"
-					+ "FROM eventos"
-					+ "		WHERE eventos.Data_evento >= curdate()"
-					+ 			"AND eventos.Hora_evento >= curtime()");
+					"SELECT Id_evento, Nome_evento, Data_evento, Hora_evento "
+					+ "FROM eventos "
+					+ 	"WHERE eventos.Data_evento >= curdate() "
+					+ 		"AND eventos.Hora_evento >= curtime()");
 			
 			while (resultadoConsulta.next()) {
-				System.out.println("Nome: " + resultadoConsulta.getString("Nome_evento")
+				System.out.println(
+				"Nº evento: " + resultadoConsulta.getInt("Id_evento")
+				+ "\nNome: " + resultadoConsulta.getString("Nome_evento")
 				+ "\nData: " + resultadoConsulta.getString("Data_evento")
 				+ "\nHora: " + resultadoConsulta.getString("Hora_evento"));
 				System.out.println("-----------");
@@ -272,7 +288,7 @@ public class Eventos extends ViacepService{
 
 	public static void main(String[] args) {
 		Eventos evento = new Eventos();
-		evento.exibirEventos();
+		evento.cadastraEvento();
 	}
 	
 }
