@@ -10,7 +10,9 @@ package modelo;
 //
 //import service.DbConexao;
 
-public class Cadastro {
+abstract interface Cadastro {
+	
+	public abstract void escreveAgora();
 	
 //	private LocalDateTime timeLocalIngresso;
 //

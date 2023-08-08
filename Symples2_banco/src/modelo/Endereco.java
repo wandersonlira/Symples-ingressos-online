@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import service.DbConexao;
 
-public class Endereco{
+public class Endereco {
 	
 	  private String cep;
 	  private String logradouro;
@@ -22,11 +22,9 @@ public class Endereco{
 	  private String ddd;
 	  private String siafi;
 	  
-	
+	  private Integer idEndereco = null;
 	  
-	  public Integer insertEndereco() {
-		  
-		  Integer idEndereco = null;
+	  public void insertEndereco() {
 		  
 		  try (Scanner input = new Scanner(System.in)) {
 			  Connection conexaoDataBase = null;
@@ -38,7 +36,7 @@ public class Endereco{
 				conexaoDataBase = DbConexao.getConexao();
 				
 				consultaDataBases = conexaoDataBase.prepareStatement(
-						  "INSERT INTO endereco"
+						  "INSERT INTO endereco "
 						  +"(Logradouro, Num_casa, Complemento, Bairro, Localidade, Uf, Cep, Ibge, Gia, Ddd, Siafi)"
 						  + "VALUES"
 						  + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -61,7 +59,7 @@ public class Endereco{
 					resultadoConsulta = consultaDataBases.getGeneratedKeys();
 					
 					while (resultadoConsulta.next()) {
-						idEndereco = resultadoConsulta.getInt(1);
+						this.idEndereco = resultadoConsulta.getInt(1);
 						System.out.println("Done! ID = " + idEndereco);
 					}
 				} else {
@@ -71,18 +69,26 @@ public class Endereco{
 			} catch (SQLException e) {
 				e.printStackTrace();
 				
-			} finally {
-				DbConexao.closeResultSet(resultadoConsulta);
-				DbConexao.closeStatement(consultaDataBases);
-				DbConexao.closeConexao();
 			}
+			  finally {
+				DbConexao.closeResultSet(resultadoConsulta);
+//				DbConexao.closeStatement(consultaDataBases);
+//				DbConexao.closeConexao();
+				}
 		}
-		  
-		 return idEndereco;
 		  
 	  }
 	  
 	  
+	  
+	public Integer getIdEndereco() {
+		return this.idEndereco;
+	}
+	
+	public void setIdEndereco(Integer idEndereco) {
+		this.idEndereco = idEndereco;
+	}
+  
 	  
 	public String getCep() {
 		return cep;

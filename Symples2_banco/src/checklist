@@ -14,3 +14,9 @@ Método para exibir os ingressos - OK
 	exibir somente ingressos disponíveis - FALTA
 
 Implementar DB - OK
+	metodo para inserir evento - OK
+	metodo para inserir endereco - OK
+	metodo para inserir participante - OK
+
+Eventos
+	metodo para criar evento - OK

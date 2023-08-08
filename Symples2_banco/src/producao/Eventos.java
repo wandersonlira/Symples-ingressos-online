@@ -21,7 +21,7 @@ import java.util.Scanner;
 import org.apache.http.client.ClientProtocolException;
 
 
-public class Eventos extends ViacepService{
+public class Eventos {
 	
 	private String nomeEvento;
 	private LocalDateTime dataEvento;
@@ -45,13 +45,14 @@ public class Eventos extends ViacepService{
 	
 	
 	public void criarEvento() {
-
+		
+		cadastraEvento();
 	}
 	
 	
 	private Integer insertEvento() {
 		
-		Integer id = null;
+		Integer idEvento = null;
 		
 		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
 		Connection conexaoDataBase = null;
@@ -89,8 +90,8 @@ public class Eventos extends ViacepService{
 				resultadoConsulta = consultaDataBase.getGeneratedKeys();
 				
 				while (resultadoConsulta.next()) {
-					id = resultadoConsulta.getInt(1);
-					System.out.println("Done! ID = " + id);
+					idEvento = resultadoConsulta.getInt(1);
+					System.out.println("Done! ID = " + idEvento);
 					
 				}
 				
@@ -102,18 +103,15 @@ public class Eventos extends ViacepService{
 			e.printStackTrace();
 		} catch (java.text.ParseException e) { // referente ao tipo Date usado em Data
 			e.printStackTrace();
-		} finally {
-			DbConexao.closeResultSet(resultadoConsulta);
-			DbConexao.closeStatement(consultaDataBase);
-			DbConexao.closeConexao();
-		}
-		return id;
+		} 
+		
+		return idEvento;
 		
 	}
 	
 	
 	
-	private Integer cadastraEndereco() {
+	private Integer insereEndereco() {
 		
 		Integer idEndereco = null;
 
@@ -122,8 +120,10 @@ public class Eventos extends ViacepService{
 			String cepCadastro = input.nextLine();
 			
 			try {
-				this.enderecoEvento = getEndereco(cepCadastro);
-				idEndereco = this.enderecoEvento.insertEndereco();
+				ViacepService apiCep = new ViacepService();
+				this.enderecoEvento = apiCep.getEndereco(cepCadastro);
+				this.enderecoEvento.insertEndereco();
+				idEndereco = this.enderecoEvento.getIdEndereco();
 				
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -141,9 +141,34 @@ public class Eventos extends ViacepService{
 	
 	
 	private void cadastraEvento() {
+		
 		Integer idEvento = insertEvento();
-		Integer idEndereco = cadastraEndereco();
-
+		Integer idEndereco = insereEndereco();
+		
+		Connection conexaoDataBase = null;
+		PreparedStatement consultaDatabase = null;
+		
+		try {
+			conexaoDataBase = DbConexao.getConexao();
+			consultaDatabase = conexaoDataBase.prepareStatement(
+					"UPDATE eventos "
+					+ "SET codigo_id_endereco = ? "
+					+	"WHERE Id_evento = ?");
+			
+			consultaDatabase.setInt(1, idEndereco);
+			consultaDatabase.setInt(2, idEvento);
+			
+			Integer linhaAlterada = consultaDatabase.executeUpdate();
+			
+			System.out.println("Linha Alterada: " + linhaAlterada);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			DbConexao.closeStatement(consultaDatabase);
+			DbConexao.closeConexao();
+		}
 		
 	}
 	
@@ -173,17 +198,19 @@ public class Eventos extends ViacepService{
 			consultaDataBase = conexaoDatabase.createStatement();
 			
 			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT Id_evento, Nome_evento, Data_evento, Hora_evento "
-					+ "FROM eventos "
+					"SELECT Id_evento, Nome_evento, Data_evento, Hora_evento, Localidade, Uf "
+					+ "FROM eventos, endereco "
 					+ 	"WHERE eventos.Data_evento >= curdate() "
-					+ 		"AND eventos.Hora_evento >= curtime()");
+//					+ 		"AND eventos.Hora_evento >= curtime() "
+					+		"AND eventos.codigo_Id_endereco = endereco.Id_endereco ");
 			
 			while (resultadoConsulta.next()) {
 				System.out.println(
 				"Nº evento: " + resultadoConsulta.getInt("Id_evento")
 				+ "\nNome: " + resultadoConsulta.getString("Nome_evento")
 				+ "\nData: " + resultadoConsulta.getString("Data_evento")
-				+ "\nHora: " + resultadoConsulta.getString("Hora_evento"));
+				+ "\nHora: " + resultadoConsulta.getString("Hora_evento")
+				+ "\nLocal: " + resultadoConsulta.getString("Localidade") + "/" + resultadoConsulta.getString("Uf"));
 				System.out.println("-----------");
 
 			}
@@ -288,7 +315,8 @@ public class Eventos extends ViacepService{
 
 	public static void main(String[] args) {
 		Eventos evento = new Eventos();
-		evento.cadastraEvento();
+		evento.exibirIngresso();
+		
 	}
 	
 }
