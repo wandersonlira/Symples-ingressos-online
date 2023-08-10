@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
+import producao.Eventos;
 import service.DbConexao;
 
 public class Ingressos{	
@@ -79,8 +80,8 @@ public class Ingressos{
 	
 
 
-	private void insertParticipanteEvento(Integer idParticipante) {
-		
+	private void insertParticipanteEvento(Integer idParticipante, Integer codEvento) {
+			
 		Connection conexaoDatabase = null;
 		PreparedStatement consultaDatabase = null;
 		ResultSet resultadoConsulta = null;
@@ -91,13 +92,9 @@ public class Ingressos{
 					"INSERT INTO participante_evento "
 					+ "(codigo_id_participante, codigo_id_evento) "
 					+ 	"VALUES (?, ?) ", Statement.RETURN_GENERATED_KEYS);
-			
-			try (Scanner input = new Scanner(System.in)) {
 				
 				consultaDatabase.setInt(1, idParticipante);
-				System.out.print("Cod. Evento: ");
-				consultaDatabase.setInt(2, input.nextInt());
-			}
+				consultaDatabase.setInt(2, codEvento);
 			
 			int linhaAlterada = consultaDatabase.executeUpdate();
 			
@@ -120,13 +117,26 @@ public class Ingressos{
 
 	public void cadastrarIngresso() {
 		
+		Eventos evento = new Eventos();
+		evento.exibirEventos();
+
+		Scanner input = new Scanner(System.in); // apenas para teste
+		System.out.print("Cod. Evento: ");
+		Integer codEvento = input.nextInt();
+		System.out.println("-------------");
+		
 		Integer idParticipante = insertParticipante();
-		insertParticipanteEvento(idParticipante);
+		System.out.println("-------------");
+		
+		insertParticipanteEvento(idParticipante, codEvento);
+		System.out.println("-------------");
+		
+		ingressoComprado(idParticipante, codEvento);
 		
 	}	
 	
 	
-	public void ingressoComprado(Integer idParticipante) {
+	public void ingressoComprado(Integer idParticipante, Integer codEvento) {
 		
 		Connection conexaoDatabase = null;
 		Statement consultaDatabase = null;
@@ -136,9 +146,29 @@ public class Ingressos{
 			conexaoDatabase = DbConexao.getConexao();
 			consultaDatabase = conexaoDatabase.createStatement();
 			resultadoConsulta = consultaDatabase.executeQuery(
-					"SELECT * FROM participantes, eventos, participante_eventos "
-					+ "WHERE "
+					"SELECT Id_evento, Nome_evento, Logradouro, Num_casa, Bairro, Localidade, Uf, Id_participante, Nome_participante "
+					+ "FROM participantes as P, eventos as EV, participante_evento as PE, endereco as EN "
+					+ 	"WHERE PE.codigo_id_evento = EV.Id_evento "
+					+		"AND PE.codigo_id_participante = P.Id_participante "
+					+ 		"AND EN.Id_endereco = EV.codigo_Id_endereco "
 					);
+
+			while (resultadoConsulta.next()) {
+				if (resultadoConsulta.getInt("Id_participante") == idParticipante 
+						&& resultadoConsulta.getInt("Id_evento") == codEvento) {
+				System.out.println(
+						"Evento: " + resultadoConsulta.getString("Nome_evento")
+					+	"\nRua: " + resultadoConsulta.getString("Logradouro")
+					+	", " + resultadoConsulta.getString("Num_casa")
+					+	"\nBairro: " + resultadoConsulta.getString("Bairro")
+					+	"\nCidade: " + resultadoConsulta.getString("Localidade")
+					+	"/" + resultadoConsulta.getString("Uf")
+					+	"\nParticipante: " + resultadoConsulta.getString("Nome_participante"));
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	

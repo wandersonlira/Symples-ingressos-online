@@ -217,11 +217,12 @@ public class Eventos {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
-		} finally {
-			DbConexao.closeResultSet(resultadoConsulta);
-			DbConexao.closeStatement(consultaDataBase);
-			DbConexao.closeConexao();
-		}
+		} 
+//		finally {
+//			DbConexao.closeResultSet(resultadoConsulta);
+//			DbConexao.closeStatement(consultaDataBase);
+//			DbConexao.closeConexao();
+//		}
 	}
 
 	
