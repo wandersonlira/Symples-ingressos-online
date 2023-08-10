@@ -256,16 +256,48 @@ public class Eventos {
 	
 	public void comprarIngresso() {
 		
-		if (this.quantidadeIngresso > 0) {
-			this.ingresso[this.cont] = new Ingressos();
-			this.ingresso[this.cont].cadastrarIngresso();
-			this.cont++;
-			this.quantidadeIngresso--;
-
-			this.boleano = true;
+//		if (this.quantidadeIngresso > 0) {
+//			this.ingresso[this.cont] = new Ingressos();
+//			this.ingresso[this.cont].cadastrarIngresso();
+//			this.cont++;
+//			this.quantidadeIngresso--;
+//
+//			this.boleano = true;
+//			
+//		} else {
+//			System.out.println(" --- INGRESSO ESGOTADO! --- ");		
+//		}
+		
+		Connection conexaoDataBase = null;
+		Statement consultaDataBase = null;
+		ResultSet resultadoConsulta = null;
+		
+		try {
+			conexaoDataBase = DbConexao.getConexao();
+			consultaDataBase = conexaoDataBase.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_UPDATABLE);
+			resultadoConsulta = consultaDataBase.executeQuery(
+					"SELECT Id_evento, Nome_evento, Qtd_ingresso, Ingressos_comprados FROM eventos ");
 			
-		} else {
-			System.out.println(" --- INGRESSO ESGOTADO! --- ");		
+
+			resultadoConsulta.absolute(6);
+			
+			if (resultadoConsulta.getInt("Ingressos_comprados") 
+					<= resultadoConsulta.getInt("Qtd_ingresso")) {
+				
+				System.out.println("Nome: " + resultadoConsulta.getString("Nome_evento"));
+				System.out.println("Ingresso disponíveis: " + resultadoConsulta.getString("Qtd_ingresso"));
+				System.out.println("Ingresso Comprados: " + resultadoConsulta.getString("Ingressos_comprados"));
+				System.out.println("--------");	
+				
+			} else {
+				System.out.println(" --- INGRESSO ESGOTADO! --- ");	
+			}
+
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -316,7 +348,7 @@ public class Eventos {
 
 	public static void main(String[] args) {
 		Eventos evento = new Eventos();
-		evento.exibirIngresso();
+		evento.comprarIngresso();
 		
 	}
 	
