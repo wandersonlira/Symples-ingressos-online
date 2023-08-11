@@ -115,15 +115,7 @@ public class Ingressos{
 	}
 
 
-	public void cadastrarIngresso() {
-		
-		Eventos evento = new Eventos();
-		evento.exibirEventos();
-
-		Scanner input = new Scanner(System.in); // apenas para teste
-		System.out.print("Cod. Evento: ");
-		Integer codEvento = input.nextInt();
-		System.out.println("-------------");
+	public void cadastrarIngresso(Integer codEvento) {
 		
 		Integer idParticipante = insertParticipante();
 		System.out.println("-------------");
@@ -229,7 +221,7 @@ public class Ingressos{
 	
 	public static void main(String[] args) {
 		Ingressos in = new Ingressos();
-		in.cadastrarIngresso();
+//		in.cadastrarIngresso();
 	}
 
 	

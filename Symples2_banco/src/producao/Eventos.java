@@ -256,44 +256,50 @@ public class Eventos {
 	
 	public void comprarIngresso() {
 		
-//		if (this.quantidadeIngresso > 0) {
-//			this.ingresso[this.cont] = new Ingressos();
-//			this.ingresso[this.cont].cadastrarIngresso();
-//			this.cont++;
-//			this.quantidadeIngresso--;
-//
-//			this.boleano = true;
-//			
-//		} else {
-//			System.out.println(" --- INGRESSO ESGOTADO! --- ");		
-//		}
+		exibirEventos();
+
+		Scanner input = new Scanner(System.in); // apenas para teste
+		
+		System.out.print("Cod. Evento: ");
+		Integer codEvento = input.nextInt();
+		System.out.println("-------------");
 		
 		Connection conexaoDataBase = null;
 		Statement consultaDataBase = null;
+		PreparedStatement updateDatabase = null;
 		ResultSet resultadoConsulta = null;
 		
 		try {
 			conexaoDataBase = DbConexao.getConexao();
 			consultaDataBase = conexaoDataBase.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_UPDATABLE);
-			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT Id_evento, Nome_evento, Qtd_ingresso, Ingressos_comprados FROM eventos ");
 			
-
-			resultadoConsulta.absolute(6);
+			resultadoConsulta = consultaDataBase.executeQuery(
+					"SELECT Qtd_ingresso, Ingressos_comprados "
+					+	"FROM eventos");
+			
+			resultadoConsulta.absolute(codEvento);
 			
 			if (resultadoConsulta.getInt("Ingressos_comprados") 
-					<= resultadoConsulta.getInt("Qtd_ingresso")) {
+					< resultadoConsulta.getInt("Qtd_ingresso")) {
 				
-				System.out.println("Nome: " + resultadoConsulta.getString("Nome_evento"));
-				System.out.println("Ingresso disponíveis: " + resultadoConsulta.getString("Qtd_ingresso"));
-				System.out.println("Ingresso Comprados: " + resultadoConsulta.getString("Ingressos_comprados"));
-				System.out.println("--------");	
+				Ingressos ingresso = new Ingressos();
+				ingresso.cadastrarIngresso(codEvento);
+				
+				 int ingressoComprado = resultadoConsulta.getInt("Ingressos_comprados") + 1;
+				 
+				 System.out.println("Cont: " + ingressoComprado);
+				
+				updateDatabase = conexaoDataBase.prepareStatement("UPDATE `db_symples`.`eventos` SET `Ingressos_comprados` = ? WHERE (`Id_evento` = ?)");
+				
+				updateDatabase.setInt(1, ingressoComprado);
+				updateDatabase.setInt(2, codEvento);
+				
+				updateDatabase.executeUpdate();
 				
 			} else {
 				System.out.println(" --- INGRESSO ESGOTADO! --- ");	
 			}
-
 
 			
 		} catch (SQLException e) {
@@ -345,7 +351,8 @@ public class Eventos {
 	public void setIngresso(Ingressos[] ingresso) {
 		this.ingresso = ingresso;
 	}
-
+	
+	
 	public static void main(String[] args) {
 		Eventos evento = new Eventos();
 		evento.comprarIngresso();
