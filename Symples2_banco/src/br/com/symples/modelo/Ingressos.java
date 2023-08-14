@@ -1,4 +1,4 @@
-package modelo;
+package br.com.symples.modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,12 +8,10 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-import producao.Eventos;
-import service.DbConexao;
+import br.com.symples.service.DbConexao;
 
 public class Ingressos{	
 	
-	private Cadastro participante;
 	private LocalDateTime timeLocalIngresso;
 
 	
@@ -167,6 +165,7 @@ public class Ingressos{
 	
 	
 	public void selectParticipante() {
+		
 		Connection conexaoDataBase = null;
 		Statement consultaDataBase = null;
 		ResultSet resultadoConsulta = null;
@@ -185,12 +184,13 @@ public class Ingressos{
 		} catch (SQLException e) {
 				e.printStackTrace();
 			
-		} finally {
-				DbConexao.closeResultSet(resultadoConsulta);
-				DbConexao.closeStatement(consultaDataBase);
-				DbConexao.closeConexao();
-			}
-				
+		} 
+		
+//		finally {
+//				DbConexao.closeResultSet(resultadoConsulta);
+//				DbConexao.closeStatement(consultaDataBase);
+//				DbConexao.closeConexao();
+//			}
 	}
 
 
@@ -207,21 +207,6 @@ public class Ingressos{
 
 	public void setTimeLocalIngresso(LocalDateTime timeLocalIngresso) {
 		this.timeLocalIngresso = timeLocalIngresso;
-	}
-
-
-	public Cadastro getParticipante() {
-		return participante;
-	}
-
-	public void setParticipante(Cadastro participante) {
-		this.participante = participante;
-	}
-	
-	
-	public static void main(String[] args) {
-		Ingressos in = new Ingressos();
-//		in.cadastrarIngresso();
 	}
 
 	

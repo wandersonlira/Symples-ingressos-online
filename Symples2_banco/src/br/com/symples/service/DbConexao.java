@@ -1,4 +1,4 @@
-package service;
+package br.com.symples.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import modelo.DbException;
+import br.com.symples.modelo.DbException;
 
 public class DbConexao {
 	

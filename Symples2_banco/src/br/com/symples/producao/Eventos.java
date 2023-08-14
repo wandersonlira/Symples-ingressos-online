@@ -1,9 +1,4 @@
-package producao;
-
-import modelo.Endereco;
-import modelo.Ingressos;
-import service.DbConexao;
-import service.ViacepService;
+package br.com.symples.producao;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,35 +15,16 @@ import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
 
+import br.com.symples.modelo.Endereco;
+import br.com.symples.modelo.Ingressos;
+import br.com.symples.service.DbConexao;
+import br.com.symples.service.ViacepService;
+
 
 public class Eventos {
 	
-	private String nomeEvento;
-	private LocalDateTime dataEvento;
-	private int quantidadeIngresso;
 	private Endereco enderecoEvento;
-	private Ingressos[] ingresso;
-	private boolean boleano = false;
-	private int cont = 0;
-	
-	public Eventos() {}
-	
 
-	public Eventos(String nomeEvento, LocalDateTime dataEvento, int quantiInteger, Endereco enderecoEvento) {
-		this.setNomeEvento(nomeEvento);
-		this.setDataEvento(dataEvento);
-		this.setQuantidadeIngresso(quantiInteger);
-		this.setEnderecoEvento(enderecoEvento);
-		this.ingresso = new Ingressos[this.quantidadeIngresso];
-	}
-	
-	
-	
-	public void criarEvento() {
-		
-		cadastraEvento();
-	}
-	
 	
 	private Integer insertEvento() {
 		
@@ -142,6 +118,7 @@ public class Eventos {
 	
 	private void cadastraEvento() {
 		
+		
 		Integer idEvento = insertEvento();
 		Integer idEndereco = insereEndereco();
 		
@@ -165,14 +142,22 @@ public class Eventos {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
-		} finally {
-			DbConexao.closeStatement(consultaDatabase);
-			DbConexao.closeConexao();
-		}
+		} 
+		
+//		finally {
+//			DbConexao.closeStatement(consultaDatabase);
+//			DbConexao.closeConexao();
+//		}
 		
 	}
 	
 	
+	public void criarEvento() {
+		
+		cadastraEvento();
+	}
+
+
 	public String exibirDataHoraLocal(Instant dataHora) {
 		LocalDateTime dataHoraMundial = LocalDateTime.ofInstant(dataHora, ZoneId.systemDefault());
 		DateTimeFormatter formatoDataHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(ZoneId.systemDefault());
@@ -229,26 +214,35 @@ public class Eventos {
 	
 	public void exibirIngresso() {
 		
-		if (this.boleano == false) {
-			System.out.println("Não há ingressos comprados");
-		}
+		Connection conexaoDataBase = null;
+		Statement consultaDataBase = null;
+		ResultSet resultadoConsulta = null;
 		
-		else if (this.boleano == true) {
-	
-			for (int i=0; i<ingresso.length; i++) {
-				if (ingresso[i] != null) {
-				System.out.println("Nome Evento: " + this.getNomeEvento());
-				System.out.println("Local Evento: " + this.converteDateTime(getDataEvento()));
-				System.out.println("Endereço: " + this.getEnderecoEvento().getLogradouro() + ", " + this.getEnderecoEvento().getBairro()
-						+ ", " + this.getEnderecoEvento().getLocalidade() + ", " + this.getEnderecoEvento().getUf());
-				this.ingresso[i].selectParticipante();
-				System.out.println("Comprado dia: " + converteDateTime(this.ingresso[i].registroCadastro()));
-				System.out.println("");
-				} else {
-					System.out.println("Ingresso nº" + i + " - Disponível");
-					}
+		try {
+			conexaoDataBase = DbConexao.getConexao();
+			consultaDataBase = conexaoDataBase.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_UPDATABLE);
+			
+			resultadoConsulta = consultaDataBase.executeQuery(
+					"SELECT Qtd_ingresso, Ingressos_comprados "
+					+	"FROM eventos");
+			
+			resultadoConsulta.absolute(7);
+			
+			if (resultadoConsulta.getInt("Ingressos_comprados") > 0) {
+				
+				 System.out.println("Ingressos: " + resultadoConsulta.getInt("Qtd_ingresso"));
+				 System.out.println("Ingressos Comprados: " + resultadoConsulta.getInt("Ingressos_comprados"));
+				
+			} else {
+				System.out.println(" --- NÃO HÁ INGRESSOS COMPRADOS! --- ");	
 			}
-		}
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+				
 		
 	}
 	
@@ -306,57 +300,6 @@ public class Eventos {
 			e.printStackTrace();
 		}
 
-	}
-
-	
-	public String getNomeEvento() {
-		return nomeEvento;
-	}
-
-	public void setNomeEvento(String nomeEvento) {
-		this.nomeEvento = nomeEvento;
-	}
-	
-
-	public LocalDateTime getDataEvento() {
-		return dataEvento;
-	}
-
-	public void setDataEvento(LocalDateTime dataEvento) {
-		this.dataEvento = dataEvento;
-	}
-
-
-	public int getQuantidadeIngresso() {
-		return quantidadeIngresso;
-	}
-
-	public void setQuantidadeIngresso(int quantidadeIngresso) {
-		this.quantidadeIngresso = quantidadeIngresso;
-	}
-	
-	public Endereco getEnderecoEvento() {
-		return enderecoEvento;
-	}
-
-	public void setEnderecoEvento(Endereco enderecoEvento) {
-		this.enderecoEvento = enderecoEvento;
-	}
-
-	
-	public Ingressos[] getIngresso() {
-		return ingresso;
-	}
-
-	public void setIngresso(Ingressos[] ingresso) {
-		this.ingresso = ingresso;
-	}
-	
-	
-	public static void main(String[] args) {
-		Eventos evento = new Eventos();
-		evento.comprarIngresso();
-		
 	}
 	
 }

@@ -1,4 +1,4 @@
-package modelo;
+package br.com.symples.modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import service.DbConexao;
+import br.com.symples.service.DbConexao;
 
 public class Endereco {
 	

@@ -1,67 +1,55 @@
-//import java.time.Instant;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Scanner;
 
-import producao.Eventos;
-import service.ViacepService;
+import br.com.symples.producao.Eventos;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
+		int opcao;
 		
-//		String nome = "FIG - Festival de Inverno de Garanhuns";
-//
-//		String cepCadastro = "52211058";
-//
-//		LocalDateTime localTime = LocalDateTime.parse("2023-07-21T18:45");
-//		
-//		int ingressos1 = 30;
-//				
-//		ViacepService viaCep = new ViacepService();
+		Scanner input = new Scanner(System.in);
 		
-//		------------------------ EVENTO 2 ---------------------------------
-		
-//		String nome2 = "CINEPORTO";
-//
-//		String cepCadastro2 = "01001000";
-//
-//		LocalDateTime localTime2 = LocalDateTime.parse("2023-07-21T18:45");
-//		int ingressos2 = 20;
-//				
-//		ViacepService viaCep2 = new ViacepService();
-		
-		
-//		try {
-//			
-//			Eventos evento = new Eventos(nome, localTime, ingressos1, viaCep.getEndereco(cepCadastro));
-//			Eventos evento2 = new Eventos(nome2, localTime2, ingressos2, viaCep2.getEndereco(cepCadastro2));
-
-//			for (int i=0; i<1; i++) {
-//				evento.comprarIngresso(); 
-//				System.out.println("-----------");
-//			}
-//			evento.comprarIngresso(); 
-//			System.out.println("-----------");
-//			evento.comprarIngresso(); 
-//			evento2.comprarIngresso();
-//			System.out.println("\n* ------ Relatório de Ingressos ------ *\n");
-//			evento.exibirIngresso();
-//			System.out.println("");
-//			evento2.exibirIngresso();
-//		
+		do {
+			System.out.println(
+					"\n* ============ MENU =========== *\n\n"
+			+	"[1] - Cadastrar Evento   \n"
+			+   "[2] - Comprar Ingresso   \n"
+			+   "[3] - Imprimir Ingresso  \n"
+			+   "[0] - Sair\n");
 			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+			System.out.print("Escolha uma Opção: ");
+			opcao = input.nextInt();
+			
+			switch (opcao) {
+			
+			case 1:
+				Eventos evento = new Eventos();
+				evento.criarEvento();
+				break;
+				
+			case 2:
+				Eventos evento2 = new Eventos();
+				evento2.comprarIngresso();
+				break;
+				
+			case 3:
+				System.out.println("Escolheu  Opcao: " + opcao);
+				break;
+				
+			default:
+				if (opcao == 0) {
+					System.out.println("\nATÉ LOGO!!");
 
-		Eventos evento = new Eventos();
-		for (int i=0; i<1; i++) {
-			evento.comprarIngresso();
-			System.out.println("-----------");
-		}
+					
+				} else {
+					System.out.println("\nOpcao invalida!! ");
+				}
+			}
+					
+		} while (opcao != 0);
+
 		
 	}
-
+	
 }

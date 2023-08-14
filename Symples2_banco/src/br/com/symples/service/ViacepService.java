@@ -1,4 +1,4 @@
-package service;
+package br.com.symples.service;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
-import modelo.Endereco;
+import br.com.symples.modelo.Endereco;
 
 public class ViacepService {
 	
