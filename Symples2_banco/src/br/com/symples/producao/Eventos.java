@@ -17,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import br.com.symples.modelo.Endereco;
 import br.com.symples.modelo.Ingressos;
+import br.com.symples.modelo.LeitorTeclado;
 import br.com.symples.service.DbConexao;
 import br.com.symples.service.ViacepService;
 
@@ -25,7 +26,7 @@ public class Eventos {
 	
 	private Endereco enderecoEvento;
 
-	
+
 	private Integer insertEvento() {
 		
 		Integer idEvento = null;
@@ -44,20 +45,18 @@ public class Eventos {
 					+ 	"VALUES "
 					+ 		"(?, ?, ? ,?)", Statement.RETURN_GENERATED_KEYS);
 			
-			@SuppressWarnings("resource")
-			Scanner input = new Scanner(System.in);
 			
 			System.out.print("Nome: ");
-			consultaDataBase.setString(1, input.nextLine());
+			consultaDataBase.setString(1, LeitorTeclado.getInputLine());
 			
 			System.out.print("Data: ");
-			consultaDataBase.setDate(2, new java.sql.Date(formatoDate.parse(input.nextLine()).getTime()));
+			consultaDataBase.setDate(2, new java.sql.Date(formatoDate.parse(LeitorTeclado.getInputLine().replace(" ", "")).getTime()));
 			
 			System.out.print("Hora: ");
-			consultaDataBase.setString(3, input.nextLine());
+			consultaDataBase.setString(3, LeitorTeclado.getInputLine().replace(" ", ""));
 			
 			System.out.print("Quantidade de ingressos: ");
-			consultaDataBase.setInt(4, input.nextInt());	
+			consultaDataBase.setInt(4, LeitorTeclado.getInputInteger());	
 			
 			int linhaModificada = consultaDataBase.executeUpdate();
 			
@@ -90,26 +89,22 @@ public class Eventos {
 	private Integer insereEndereco() {
 		
 		Integer idEndereco = null;
-
-		try (Scanner input = new Scanner(System.in)) {
-			System.out.print("CEP: ");
-			String cepCadastro = input.nextLine();
+		
+		System.out.print("CEP: ");
+		String cepCadastro = LeitorTeclado.getInputLine();
+		
+		try {
+			ViacepService apiCep = new ViacepService();
+			this.enderecoEvento = apiCep.getEndereco(cepCadastro);
+			this.enderecoEvento.insertEndereco();
+			idEndereco = this.enderecoEvento.getIdEndereco();
 			
-			try {
-				ViacepService apiCep = new ViacepService();
-				this.enderecoEvento = apiCep.getEndereco(cepCadastro);
-				this.enderecoEvento.insertEndereco();
-				idEndereco = this.enderecoEvento.getIdEndereco();
-				
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				
-			} finally {
-				input.close();
-			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			
 		}
 		
 		return idEndereco;	
@@ -129,7 +124,7 @@ public class Eventos {
 			conexaoDataBase = DbConexao.getConexao();
 			consultaDatabase = conexaoDataBase.prepareStatement(
 					"UPDATE eventos "
-					+ "SET codigo_id_endereco = ? "
+					+ "SET Codigo_id_endereco = ? "
 					+	"WHERE Id_evento = ?");
 			
 			consultaDatabase.setInt(1, idEndereco);
@@ -227,7 +222,7 @@ public class Eventos {
 					"SELECT Qtd_ingresso, Ingressos_comprados "
 					+	"FROM eventos");
 			
-			resultadoConsulta.absolute(7);
+			resultadoConsulta.absolute(1);
 			
 			if (resultadoConsulta.getInt("Ingressos_comprados") > 0) {
 				
@@ -251,11 +246,9 @@ public class Eventos {
 	public void comprarIngresso() {
 		
 		exibirEventos();
-
-		Scanner input = new Scanner(System.in); // apenas para teste
 		
 		System.out.print("Cod. Evento: ");
-		Integer codEvento = input.nextInt();
+		Integer codEvento = LeitorTeclado.getInputInteger();
 		System.out.println("-------------");
 		
 		Connection conexaoDataBase = null;
@@ -300,6 +293,14 @@ public class Eventos {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public static void main(String[] args) {
+		Eventos evento = new Eventos();
+		evento.insereEndereco();
+		Eventos evento2 = new Eventos();
+		evento2.insereEndereco();
+		LeitorTeclado.closeInput();
 	}
 	
 }

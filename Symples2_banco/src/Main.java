@@ -1,16 +1,16 @@
 import java.util.Scanner;
 
 import br.com.symples.producao.Eventos;
+import br.com.symples.modelo.LeitorTeclado;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		int opcao;
-		
-		Scanner input = new Scanner(System.in);
+		Integer opcao;
 		
 		do {
+			
 			System.out.println(
 					"\n* ============ MENU =========== *\n\n"
 			+	"[1] - Cadastrar Evento   \n"
@@ -19,13 +19,15 @@ public class Main {
 			+   "[0] - Sair\n");
 			
 			System.out.print("Escolha uma Opção: ");
-			opcao = input.nextInt();
+			opcao = LeitorTeclado.getInputInteger();
+			LeitorTeclado.clearInput();
 			
 			switch (opcao) {
 			
 			case 1:
 				Eventos evento = new Eventos();
 				evento.criarEvento();
+//				
 				break;
 				
 			case 2:
@@ -34,13 +36,14 @@ public class Main {
 				break;
 				
 			case 3:
-				System.out.println("Escolheu  Opcao: " + opcao);
+				Eventos evento3 = new Eventos();
+				evento3.exibirIngresso();
 				break;
 				
 			default:
 				if (opcao == 0) {
 					System.out.println("\nATÉ LOGO!!");
-
+					LeitorTeclado.closeInput();					
 					
 				} else {
 					System.out.println("\nOpcao invalida!! ");
@@ -48,7 +51,6 @@ public class Main {
 			}
 					
 		} while (opcao != 0);
-
 		
 	}
 	
