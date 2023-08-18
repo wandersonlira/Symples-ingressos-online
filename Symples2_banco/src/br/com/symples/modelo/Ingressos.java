@@ -63,11 +63,7 @@ public class Ingressos{
 					e.printStackTrace();
 					
 				} 
-	//		finally {
-	//				DbConexao.closeResultSet(resultadoConsulta);
-	//				DbConexao.closeStatement(consultaDataBase);
-	//				DbConexao.closeConexao();
-	//			}
+			
 			return idParticipante;
 			
 		}
@@ -182,11 +178,6 @@ public class Ingressos{
 			
 		} 
 		
-//		finally {
-//				DbConexao.closeResultSet(resultadoConsulta);
-//				DbConexao.closeStatement(consultaDataBase);
-//				DbConexao.closeConexao();
-//			}
 	}
 
 

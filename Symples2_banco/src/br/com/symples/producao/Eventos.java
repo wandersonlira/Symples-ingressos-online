@@ -23,10 +23,10 @@ import br.com.symples.service.ViacepService;
 
 public class Eventos {
 	
-	private Endereco enderecoEvento;
+	private static Endereco enderecoEvento;
 
 
-	private Integer insertEvento() {
+	private static Integer insertEvento() {
 		
 		Integer idEvento = null;
 		
@@ -85,7 +85,7 @@ public class Eventos {
 	
 	
 	
-	private Integer insereEndereco() {
+	private static Integer insereEndereco() {
 		
 		Integer idEndereco = null;
 		
@@ -97,9 +97,12 @@ public class Eventos {
 		
 		try {
 			ViacepService apiCep = new ViacepService();
-			this.enderecoEvento = apiCep.getEndereco(cepCadastro);
-			this.enderecoEvento.insertEndereco(nomeLocal);
-			idEndereco = this.enderecoEvento.getIdEndereco();
+//			this.enderecoEvento = apiCep.getEndereco(cepCadastro);
+			enderecoEvento = apiCep.getEndereco(cepCadastro);
+//			this.enderecoEvento.insertEndereco(nomeLocal);
+			enderecoEvento.insertEndereco(nomeLocal);
+//			idEndereco = this.enderecoEvento.getIdEndereco();
+			idEndereco = enderecoEvento.getIdEndereco();
 			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -113,7 +116,7 @@ public class Eventos {
 	}
 	
 	
-	private void cadastraEvento() {
+	private static void cadastraEvento() {
 		
 		
 		Integer idEvento = insertEvento();
@@ -141,15 +144,10 @@ public class Eventos {
 			
 		} 
 		
-//		finally {
-//			DbConexao.closeStatement(consultaDatabase);
-//			DbConexao.closeConexao();
-//		}
-		
 	}
 	
 	
-	public void criarEvento() {
+	public static void criarEvento() {
 		
 		cadastraEvento();
 	}
@@ -169,7 +167,7 @@ public class Eventos {
 	
 	
 	
-	public void exibirEventos() {
+	public static void exibirEventos() {
 		
 		Connection conexaoDatabase = null;
 		Statement consultaDataBase = null;
@@ -200,11 +198,7 @@ public class Eventos {
 			e.printStackTrace();
 			
 		} 
-//		finally {
-//			DbConexao.closeResultSet(resultadoConsulta);
-//			DbConexao.closeStatement(consultaDataBase);
-//			DbConexao.closeConexao();
-//		}
+		
 	}
 
 	
@@ -245,9 +239,7 @@ public class Eventos {
 	
 	
 	
-	public void comprarIngresso() {
-		
-		exibirEventos(); // Talvez eu chame a opção no MAIN
+	public static void comprarIngresso() {
 		
 		System.out.print("Cod. Evento: ");
 		Integer codEvento = LeitorTeclado.getInputInteger();
