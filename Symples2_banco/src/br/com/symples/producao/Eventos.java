@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -90,13 +89,16 @@ public class Eventos {
 		
 		Integer idEndereco = null;
 		
+		System.out.print("Local: ");
+		String nomeLocal = LeitorTeclado.getInputLine();
+
 		System.out.print("CEP: ");
 		String cepCadastro = LeitorTeclado.getInputLine();
 		
 		try {
 			ViacepService apiCep = new ViacepService();
 			this.enderecoEvento = apiCep.getEndereco(cepCadastro);
-			this.enderecoEvento.insertEndereco();
+			this.enderecoEvento.insertEndereco(nomeLocal);
 			idEndereco = this.enderecoEvento.getIdEndereco();
 			
 		} catch (ClientProtocolException e) {
@@ -182,7 +184,7 @@ public class Eventos {
 					+ "FROM eventos, endereco "
 					+ 	"WHERE eventos.Data_evento >= curdate() "
 //					+ 		"AND eventos.Hora_evento >= curtime() "
-					+		"AND eventos.codigo_Id_endereco = endereco.Id_endereco ");
+					+		"AND eventos.Codigo_Id_endereco = endereco.Id_endereco ");
 			
 			while (resultadoConsulta.next()) {
 				System.out.println(
@@ -222,7 +224,7 @@ public class Eventos {
 					"SELECT Qtd_ingresso, Ingressos_comprados "
 					+	"FROM eventos");
 			
-			resultadoConsulta.absolute(1);
+			resultadoConsulta.absolute(1); // este número é para teste
 			
 			if (resultadoConsulta.getInt("Ingressos_comprados") > 0) {
 				
@@ -245,10 +247,11 @@ public class Eventos {
 	
 	public void comprarIngresso() {
 		
-		exibirEventos();
+		exibirEventos(); // Talvez eu chame a opção no MAIN
 		
 		System.out.print("Cod. Evento: ");
 		Integer codEvento = LeitorTeclado.getInputInteger();
+		LeitorTeclado.clearInput();
 		System.out.println("-------------");
 		
 		Connection conexaoDataBase = null;
@@ -293,14 +296,6 @@ public class Eventos {
 			e.printStackTrace();
 		}
 
-	}
-	
-	public static void main(String[] args) {
-		Eventos evento = new Eventos();
-		evento.insereEndereco();
-		Eventos evento2 = new Eventos();
-		evento2.insereEndereco();
-		LeitorTeclado.closeInput();
 	}
 	
 }

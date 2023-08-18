@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.Scanner;
 
 import br.com.symples.service.DbConexao;
 
@@ -34,17 +33,14 @@ public class Ingressos{
 						+ 		"(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				
 				
-				@SuppressWarnings("resource")
-				Scanner input = new Scanner(System.in);
-				
 				System.out.print("Nome: ");
-				consultaDataBase.setString(1, input.nextLine());
+				consultaDataBase.setString(1, LeitorTeclado.getInputLine());
 				
 				System.out.print("CPF: ");
-				consultaDataBase.setString(2, input.nextLine());
+				consultaDataBase.setString(2, LeitorTeclado.getInputLine());
 				
 				System.out.print("Email: ");
-				consultaDataBase.setString(3, input.nextLine());
+				consultaDataBase.setString(3, LeitorTeclado.getInputLine());
 				
 				this.timeLocalIngresso = LocalDateTime.now();
 				
@@ -88,7 +84,7 @@ public class Ingressos{
 			conexaoDatabase = DbConexao.getConexao();
 			consultaDatabase = conexaoDatabase.prepareStatement(
 					"INSERT INTO participante_evento "
-					+ "(codigo_id_participante, codigo_id_evento) "
+					+ "(Codigo_id_participante, Codigo_id_evento) "
 					+ 	"VALUES (?, ?) ", Statement.RETURN_GENERATED_KEYS);
 				
 				consultaDatabase.setInt(1, idParticipante);
@@ -136,11 +132,11 @@ public class Ingressos{
 			conexaoDatabase = DbConexao.getConexao();
 			consultaDatabase = conexaoDatabase.createStatement();
 			resultadoConsulta = consultaDatabase.executeQuery(
-					"SELECT Id_evento, Nome_evento, Logradouro, Num_casa, Bairro, Localidade, Uf, Id_participante, Nome_participante "
+					"SELECT Id_evento, Nome_evento, Logradouro, NumCasa, Bairro, Localidade, Uf, Id_participante, Nome_participante "
 					+ "FROM participantes as P, eventos as EV, participante_evento as PE, endereco as EN "
-					+ 	"WHERE PE.codigo_id_evento = EV.Id_evento "
-					+		"AND PE.codigo_id_participante = P.Id_participante "
-					+ 		"AND EN.Id_endereco = EV.codigo_Id_endereco "
+					+ 	"WHERE PE.Codigo_id_evento = EV.Id_evento "
+					+		"AND PE.Codigo_id_participante = P.Id_participante "
+					+ 		"AND EN.Id_endereco = EV.Codigo_Id_endereco "
 					);
 
 			while (resultadoConsulta.next()) {
@@ -149,7 +145,7 @@ public class Ingressos{
 				System.out.println(
 						"Evento: " + resultadoConsulta.getString("Nome_evento")
 					+	"\nRua: " + resultadoConsulta.getString("Logradouro")
-					+	", " + resultadoConsulta.getString("Num_casa")
+					+	", " + resultadoConsulta.getString("NumCasa")
 					+	"\nBairro: " + resultadoConsulta.getString("Bairro")
 					+	"\nCidade: " + resultadoConsulta.getString("Localidade")
 					+	"/" + resultadoConsulta.getString("Uf")

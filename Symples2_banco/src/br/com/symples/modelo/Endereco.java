@@ -23,7 +23,8 @@ public class Endereco {
 	  
 	  private Integer idEndereco = null;
 	  
-	  public void insertEndereco() {  	  
+	  
+	  public void insertEndereco(String nomeLocal) {  	  
 		  
 		  Connection conexaoDataBase = null;
 		  PreparedStatement consultaDataBases = null;
@@ -35,25 +36,26 @@ public class Endereco {
 			
 			consultaDataBases = conexaoDataBase.prepareStatement(
 					  "INSERT INTO endereco "
-					  +"(Logradouro, Num_casa, Complemento, Bairro, Localidade, Uf, Cep, Ibge, Gia, Ddd, Siafi)"
+					  +"(Logradouro, NomeLocal, NumCasa, Complemento, Bairro, Localidade, Uf, Cep, Ibge, Gia, Ddd, Siafi)"
 					  + "VALUES"
-					  + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					  + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			consultaDataBases.setString(1, this.logradouro);
+			consultaDataBases.setString(2, nomeLocal);
 			
 			System.out.print("Nº: ");
 			String numCasa = LeitorTeclado.getInputLine();
-			  
-			consultaDataBases.setString(2, numCasa);
-			consultaDataBases.setString(3, this.complemento);
-			consultaDataBases.setString(4, this.bairro);
-			consultaDataBases.setString(5, this.localidade);
-			consultaDataBases.setString(6, this.uf);
-			consultaDataBases.setString(7, this.cep);
-			consultaDataBases.setString(8, this.ibge);
-			consultaDataBases.setString(9, this.gia);
-			consultaDataBases.setString(10, this.ddd);
-			consultaDataBases.setString(11, this.siafi);
+			consultaDataBases.setString(3, numCasa);
+			
+			consultaDataBases.setString(4, this.complemento);
+			consultaDataBases.setString(5, this.bairro);
+			consultaDataBases.setString(6, this.localidade);
+			consultaDataBases.setString(7, this.uf);
+			consultaDataBases.setString(8, this.cep);
+			consultaDataBases.setString(9, this.ibge);
+			consultaDataBases.setString(10, this.gia);
+			consultaDataBases.setString(11, this.ddd);
+			consultaDataBases.setString(12, this.siafi);
 			
 			int linhasAlteradas = consultaDataBases.executeUpdate();
 			
@@ -76,12 +78,9 @@ public class Endereco {
 			DbConexao.closeResultSet(resultadoConsulta);
 //				DbConexao.closeStatement(consultaDataBases);
 //				DbConexao.closeConexao();
-			}
-
-		  
+			}	  
 	  }
-	  
-	  
+	  	  
 	  
 	public Integer getIdEndereco() {
 		return this.idEndereco;
@@ -90,77 +89,6 @@ public class Endereco {
 	public void setIdEndereco(Integer idEndereco) {
 		this.idEndereco = idEndereco;
 	}
-  
-	  
-	public String getCep() {
-		return cep;
-	}
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
-	public String getLogradouro() {
-		return logradouro;
-	}
-	public void setLogradouro(String logradouro) {
-		this.logradouro = logradouro;
-	}
-	public String getComplemento() {
-		return complemento;
-	}
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
-	}
-	public String getBairro() {
-		return bairro;
-	}
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-	public String getLocalidade() {
-		return localidade;
-	}
-	public void setLocalidade(String localidade) {
-		this.localidade = localidade;
-	}
-	public String getUf() {
-		return uf;
-	}
-	public void setUf(String uf) {
-		this.uf = uf;
-	}
-	public String getIbge() {
-		return ibge;
-	}
-	public void setIbge(String ibge) {
-		this.ibge = ibge;
-	}
-	public String getGia() {
-		return gia;
-	}
-	public void setGia(String gia) {
-		this.gia = gia;
-	}
-	public String getDdd() {
-		return ddd;
-	}
-	public void setDdd(String ddd) {
-		this.ddd = ddd;
-	}
-	public String getSiafi() {
-		return siafi;
-	}
-	public void setSiafi(String siafi) {
-		this.siafi = siafi;
-	}
-	
-	
-	@Override
-	public String toString() {
-		return "Endereco [cep=" + cep + ", logradouro=" + logradouro + ", complemento=" + complemento + ", bairro="
-				+ bairro + ", localidade=" + localidade + ", uf=" + uf + ", ibge=" + ibge + ", gia=" + gia + ", ddd="
-				+ ddd + ", siafi=" + siafi + "]";
-	}
-	
 	 
 	  
 }

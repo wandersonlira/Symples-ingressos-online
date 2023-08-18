@@ -1,7 +1,6 @@
-import java.util.Scanner;
-
-import br.com.symples.producao.Eventos;
 import br.com.symples.modelo.LeitorTeclado;
+import br.com.symples.producao.Eventos;
+import br.com.symples.service.DbConexao;
 
 public class Main {
 
@@ -43,7 +42,8 @@ public class Main {
 			default:
 				if (opcao == 0) {
 					System.out.println("\nATÉ LOGO!!");
-					LeitorTeclado.closeInput();					
+					LeitorTeclado.closeInput();
+					DbConexao.closeConexao();
 					
 				} else {
 					System.out.println("\nOpcao invalida!! ");
@@ -51,6 +51,7 @@ public class Main {
 			}
 					
 		} while (opcao != 0);
+		
 		
 	}
 	
