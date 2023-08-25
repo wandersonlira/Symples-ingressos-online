@@ -1,13 +1,14 @@
 package br.com.symples.modelo;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
 import java.time.LocalDateTime;
 
-import br.com.symples.service.DbConexao;
+import Dao.CRUD;
+//import br.com.symples.service.DbConexao;
 
 public class Ingressos{	
 	
@@ -18,20 +19,13 @@ public class Ingressos{
 			
 			Integer idParticipante = null;
 			
-			Connection conexaoDataBase = null;
 			PreparedStatement consultaDataBase = null;
 			ResultSet resultadoConsulta = null;
-			
+		
 			try {
 				
-				conexaoDataBase = DbConexao.getConexao();
-				
-				consultaDataBase = conexaoDataBase.prepareStatement(
-						"INSERT INTO participantes " 
-						+ "(Nome_participante, Cpf, Email) "
-						+ 	"VALUES "
-						+ 		"(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-				
+				CRUD crud = new CRUD();
+				consultaDataBase = crud.getInsert("participantes");
 				
 				System.out.print("Nome: ");
 				consultaDataBase.setString(1, LeitorTeclado.getInputLine());
@@ -72,16 +66,12 @@ public class Ingressos{
 
 	private void insertParticipanteEvento(Integer idParticipante, Integer codEvento) {
 			
-		Connection conexaoDatabase = null;
 		PreparedStatement consultaDatabase = null;
 		ResultSet resultadoConsulta = null;
-		
 		try {
-			conexaoDatabase = DbConexao.getConexao();
-			consultaDatabase = conexaoDatabase.prepareStatement(
-					"INSERT INTO participante_evento "
-					+ "(Codigo_id_participante, Codigo_id_evento) "
-					+ 	"VALUES (?, ?) ", Statement.RETURN_GENERATED_KEYS);
+			
+			CRUD crud = new CRUD();
+			consultaDatabase = crud.InsertTableColum("participante_evento", "Codigo_id_participante", "Codigo_id_evento");
 				
 				consultaDatabase.setInt(1, idParticipante);
 				consultaDatabase.setInt(2, codEvento);
@@ -120,20 +110,13 @@ public class Ingressos{
 	
 	public void ingressoComprado(Integer idParticipante, Integer codEvento) {
 		
-		Connection conexaoDatabase = null;
-		Statement consultaDatabase = null;
 		ResultSet resultadoConsulta = null;
 		
 		try {
-			conexaoDatabase = DbConexao.getConexao();
-			consultaDatabase = conexaoDatabase.createStatement();
-			resultadoConsulta = consultaDatabase.executeQuery(
-					"SELECT Id_evento, Nome_evento, Logradouro, NumCasa, Bairro, Localidade, Uf, Id_participante, Nome_participante "
-					+ "FROM participantes as P, eventos as EV, participante_evento as PE, endereco as EN "
-					+ 	"WHERE PE.Codigo_id_evento = EV.Id_evento "
-					+		"AND PE.Codigo_id_participante = P.Id_participante "
-					+ 		"AND EN.Id_endereco = EV.Codigo_Id_endereco "
-					);
+			
+			CRUD crud = new CRUD();
+			resultadoConsulta = crud.getSelect("eventos", "endereco", "participantes", "participante_evento");
+			
 
 			while (resultadoConsulta.next()) {
 				if (resultadoConsulta.getInt("Id_participante") == idParticipante 
@@ -158,16 +141,12 @@ public class Ingressos{
 	
 	public void selectParticipante() {
 		
-		Connection conexaoDataBase = null;
-		Statement consultaDataBase = null;
 		ResultSet resultadoConsulta = null;
 		
 		try {
-			conexaoDataBase = DbConexao.getConexao();
 			
-			consultaDataBase = conexaoDataBase.createStatement();
-			
-			resultadoConsulta = consultaDataBase.executeQuery("SELECT * FROM participantes");
+			CRUD crud = new CRUD();
+			resultadoConsulta = crud.getSelect("participantes");
 			
 			while (resultadoConsulta.next()) {
 				System.out.println(resultadoConsulta.getInt("Id_participante") + ", " + resultadoConsulta.getString("Nome_participante"));
@@ -195,6 +174,7 @@ public class Ingressos{
 	public void setTimeLocalIngresso(LocalDateTime timeLocalIngresso) {
 		this.timeLocalIngresso = timeLocalIngresso;
 	}
+
 
 	
 }

@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.http.client.ClientProtocolException;
 
+import Dao.CRUD;
 import br.com.symples.modelo.Endereco;
 import br.com.symples.modelo.Ingressos;
 import br.com.symples.modelo.LeitorTeclado;
@@ -90,6 +91,7 @@ public class Eventos {
 		Integer idEndereco = null;
 		
 		System.out.print("Local: ");
+		LeitorTeclado.clearInput();
 		String nomeLocal = LeitorTeclado.getInputLine();
 
 		System.out.print("CEP: ");
@@ -169,20 +171,12 @@ public class Eventos {
 	
 	public static void exibirEventos() {
 		
-		Connection conexaoDatabase = null;
-		Statement consultaDataBase = null;
 		ResultSet resultadoConsulta = null;		
 		
 		try {
-			conexaoDatabase = DbConexao.getConexao();
-			consultaDataBase = conexaoDatabase.createStatement();
 			
-			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT Id_evento, Nome_evento, Data_evento, Hora_evento, Localidade, Uf "
-					+ "FROM eventos, endereco "
-					+ 	"WHERE eventos.Data_evento >= curdate() "
-//					+ 		"AND eventos.Hora_evento >= curtime() "
-					+		"AND eventos.Codigo_Id_endereco = endereco.Id_endereco ");
+			CRUD crud = new CRUD();
+			resultadoConsulta = crud.getSelect("eventos", "endereco");
 			
 			while (resultadoConsulta.next()) {
 				System.out.println(
@@ -205,34 +199,30 @@ public class Eventos {
 	
 	public void exibirIngresso() {
 		
-		Connection conexaoDataBase = null;
-		Statement consultaDataBase = null;
 		ResultSet resultadoConsulta = null;
-		
-		try {
-			conexaoDataBase = DbConexao.getConexao();
-			consultaDataBase = conexaoDataBase.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
 			
-			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT Qtd_ingresso, Ingressos_comprados "
-					+	"FROM eventos");
-			
-			resultadoConsulta.absolute(1); // este número é para teste
-			
-			if (resultadoConsulta.getInt("Ingressos_comprados") > 0) {
+			try {
 				
-				 System.out.println("Ingressos: " + resultadoConsulta.getInt("Qtd_ingresso"));
-				 System.out.println("Ingressos Comprados: " + resultadoConsulta.getInt("Ingressos_comprados"));
+				CRUD crud = new CRUD();
+				resultadoConsulta = crud.getSelect("eventos");
 				
-			} else {
-				System.out.println(" --- NÃO HÁ INGRESSOS COMPRADOS! --- ");	
-			}
+				resultadoConsulta.absolute(1); // este número é para teste
+				
+				if (resultadoConsulta.getInt("Ingresso_comprado") > 0) {
+					
+					 System.out.println("Ingressos: " + resultadoConsulta.getInt("Qtd_ingresso"));
+					 System.out.println("Ingressos Comprados: " + resultadoConsulta.getInt("Ingresso_comprado"));
+					
+				} else {
+					System.out.println(" --- NÃO HÁ INGRESSOS COMPRADOS! --- ");	
+				}
+				
+			} catch (SQLException e) {
 
+				e.printStackTrace();
+			} 
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}	
+				
 				
 		
 	}
@@ -257,36 +247,47 @@ public class Eventos {
 					ResultSet.CONCUR_UPDATABLE);
 			
 			resultadoConsulta = consultaDataBase.executeQuery(
-					"SELECT Qtd_ingresso, Ingressos_comprados "
+					"SELECT Qtd_ingresso, Ingresso_comprado "
 					+	"FROM eventos");
+		
+//		CRUD crud = new CRUD();
+//		resultadoConsulta = crud.getSelect("eventos");
 			
-			resultadoConsulta.absolute(codEvento);
-			
-			if (resultadoConsulta.getInt("Ingressos_comprados") 
-					< resultadoConsulta.getInt("Qtd_ingresso")) {
+//			try {
 				
+				resultadoConsulta.absolute(1);
+				
+				if (resultadoConsulta.getInt("Ingresso_comprado") 
+						< resultadoConsulta.getInt("Qtd_ingresso")) {
+					
+					System.out.println("Qtd: " + resultadoConsulta.getInt("Qtd_ingresso"));
+					System.out.println("Ingre: " + resultadoConsulta.getInt("Ingresso_comprado"));
+					
 				Ingressos ingresso = new Ingressos();
 				ingresso.cadastrarIngresso(codEvento);
 				
-				 int ingressoComprado = resultadoConsulta.getInt("Ingressos_comprados") + 1;
+				 int ingressoComprado = resultadoConsulta.getInt("Ingresso_comprado") + 1;
 				 
 				 System.out.println("Cont: " + ingressoComprado);
 				
-				updateDatabase = conexaoDataBase.prepareStatement("UPDATE `db_symples`.`eventos` SET `Ingressos_comprados` = ? WHERE (`Id_evento` = ?)");
+				updateDatabase = conexaoDataBase.prepareStatement("UPDATE `db_symples`.`eventos` SET `Ingresso_comprado` = ? WHERE (`Id_evento` = ?)");
 				
 				updateDatabase.setInt(1, ingressoComprado);
 				updateDatabase.setInt(2, codEvento);
 				
 				updateDatabase.executeUpdate();
-				
-			} else {
-				System.out.println(" --- INGRESSO ESGOTADO! --- ");	
+					
+				} else {
+					System.out.println(" --- INGRESSO ESGOTADO! --- ");	
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 
 	}
 	
