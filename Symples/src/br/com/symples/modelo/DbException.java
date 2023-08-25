@@ -1,4 +1,4 @@
-package modelo;
+package br.com.symples.modelo;
 
 public class DbException extends RuntimeException{
 
