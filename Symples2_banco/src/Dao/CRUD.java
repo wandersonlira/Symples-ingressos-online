@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import br.com.symples.modelo.LeitorTeclado;
+import br.com.symples.LeitorTeclado;
 import br.com.symples.service.DbConexao;
 
 

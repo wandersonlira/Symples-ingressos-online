@@ -9,11 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import br.com.symples.modelo.DbException;
+import br.com.symples.DbException;
 
 public class DbConexao {
 	
-	private static Connection conection = null;
+	private static Connection conexao = null;
 	
 
 	private static Properties loadPropriedades() {
@@ -34,28 +34,28 @@ public class DbConexao {
 	
 	public static Connection getConexao() {
 		
-		if (conection == null) {
+		if (conexao == null) {
 			
 			Properties carregaArquivo = loadPropriedades();
 			String url = carregaArquivo.getProperty("dburl");
 			
 			try {
-				conection = DriverManager.getConnection(url, carregaArquivo);
+				conexao = DriverManager.getConnection(url, carregaArquivo);
 				
 			} catch (SQLException e) {
 					throw new DbException(e.getMessage());
 				}
 		}
-		return conection;
+		return conexao;
 		
 	}
 	
 	
 	public static void closeConexao() {
 		
-		if (conection != null) {
+		if (conexao != null) {
 			try {
-				conection.close();
+				conexao.close();
 				
 			} catch (SQLException e) {
 					throw new DbException(e.getMessage());

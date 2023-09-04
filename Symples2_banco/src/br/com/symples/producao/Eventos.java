@@ -15,16 +15,18 @@ import java.time.format.DateTimeFormatter;
 import org.apache.http.client.ClientProtocolException;
 
 import Dao.CRUD;
-import br.com.symples.modelo.Endereco;
-import br.com.symples.modelo.Ingressos;
-import br.com.symples.modelo.LeitorTeclado;
+import br.com.symples.Ingressos;
+import br.com.symples.LeitorTeclado;
+import br.com.symples.modelo.dao.DaoFactory;
+import br.com.symples.modelo.dao.EnderecoDao;
+import br.com.symples.modelo.entidades.Endereco;
 import br.com.symples.service.DbConexao;
 import br.com.symples.service.ViacepService;
 
 
 public class Eventos {
 	
-	private static Endereco enderecoEvento;
+	public static Endereco enderecoEvento;
 
 
 	private static Integer insertEvento() {
@@ -90,20 +92,27 @@ public class Eventos {
 		
 		Integer idEndereco = null;
 		
+		EnderecoDao novoEndereco = DaoFactory.createEndereco();
+		
 		System.out.print("Local: ");
 		LeitorTeclado.clearInput();
 		String nomeLocal = LeitorTeclado.getInputLine();
+		
+		System.out.print("numeroLocal: ");
+		String numerolocal = LeitorTeclado.getInputLine();
 
 		System.out.print("CEP: ");
 		String cepCadastro = LeitorTeclado.getInputLine();
 		
 		try {
 			ViacepService apiCep = new ViacepService();
-//			this.enderecoEvento = apiCep.getEndereco(cepCadastro);
+
 			enderecoEvento = apiCep.getEndereco(cepCadastro);
-//			this.enderecoEvento.insertEndereco(nomeLocal);
-			enderecoEvento.insertEndereco(nomeLocal);
-//			idEndereco = this.enderecoEvento.getIdEndereco();
+			enderecoEvento.setNomeLocal(nomeLocal);
+			enderecoEvento.setNumLocal(numerolocal);
+
+			novoEndereco.insert(enderecoEvento);
+			
 			idEndereco = enderecoEvento.getIdEndereco();
 			
 		} catch (ClientProtocolException e) {
@@ -250,10 +259,6 @@ public class Eventos {
 					"SELECT Qtd_ingresso, Ingresso_comprado "
 					+	"FROM eventos");
 		
-//		CRUD crud = new CRUD();
-//		resultadoConsulta = crud.getSelect("eventos");
-			
-//			try {
 				
 				resultadoConsulta.absolute(1);
 				
@@ -282,13 +287,10 @@ public class Eventos {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-
-			
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+			}		
 
 	}
+	
+	
 	
 }
