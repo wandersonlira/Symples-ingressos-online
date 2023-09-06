@@ -1,10 +1,8 @@
-import java.sql.Time;
-import java.util.Date;
-
 import br.com.symples.modelo.dao.DaoFactory;
 import br.com.symples.modelo.dao.EventosDao;
-import br.com.symples.modelo.entidades.Endereco;
+import br.com.symples.modelo.dao.ParticipantesDao;
 import br.com.symples.modelo.entidades.Eventos;
+import br.com.symples.modelo.entidades.Participantes;
 
 public class Main {
 	
@@ -160,23 +158,42 @@ public class Main {
 // ----------------------------------------------------------------------------------------------------------------------------------		
 		
 			
+		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
 		EventosDao novoEvento = DaoFactory.createEventos();
 		
-		Endereco endere = new Endereco();
 		
-		endere.setIdEndereco(3);
 		
 		Eventos evento = new Eventos();
 		
-		evento.setNomeEvento("Esculturas: Bilolas de Brennand");
-		evento.setDataEvento(new Date());
-		evento.setHoraEvento(new Time(0));
-		evento.setIngressos(12);
-		evento.setIngressoComprado(0);
-		evento.setCategoria("Exposição");
-		evento.setCodigoEndereco(endere);
+		evento =  novoEvento.findById(1);
 		
-		novoEvento.insert(evento);
+		System.out.println(evento);
+		
+		Participantes participante = new Participantes(1, "Elon Musk", "00000000001", "bilionario.gmail.com", evento);
+		
+		novoParticipante.update(participante);
+		
+		
+		
+
+		
+//		Endereco endere = new Endereco();
+//		
+//		endere.setIdEndereco(3);
+//		
+//		Eventos evento = new Eventos();
+//		
+//		evento.setNomeEvento("Nada tem");
+//		evento.setDataEvento(new Date());
+//		evento.setHoraEvento(new Time(0));
+//		evento.setIngressos(13);
+//		evento.setIngressoComprado(0);
+//		evento.setCategoria("Excluir");
+//		evento.setCodigoEndereco(endere);
+//		evento.setIdEvento(1);
+//		
+//		novoEvento.insert(evento);
+		
 		
 		
 		

@@ -1,15 +1,18 @@
 package br.com.symples.modelo.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.symples.DbException;
 import br.com.symples.modelo.dao.EventosDao;
+import br.com.symples.modelo.entidades.Endereco;
 import br.com.symples.modelo.entidades.Eventos;
 import br.com.symples.service.DbConexao;
 
@@ -106,23 +109,155 @@ public class EventosDaoJDBC implements EventosDao{
 		}
 		
 	}
+	
+	
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement stConsulta = null;
+		
+		try {
+			stConsulta = conexao.prepareStatement(
+					"DELETE FROM Eventos "
+					+ "WHERE idEvento = ?");
+			
+			stConsulta.setInt(1, id);
+			
+			int rowsAffected = stConsulta.executeUpdate();
+			
+			if (rowsAffected == 0) {
+				System.out.println("Erro inesperado... 'id' informado não existe na tabela");
+			}
+			
+		} catch(SQLException e) {
+			throw new DbException(e.getMessage());
+			
+		}finally {
+			DbConexao.closeStatement(stConsulta);
+		}
 		
 	}
+	
+	
 
 	@Override
 	public Eventos findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PreparedStatement stConsulta = null;
+		ResultSet rsResultado = null;
+		
+		try {
+			stConsulta = conexao.prepareStatement(
+					"SELECT * FROM Eventos INNER JOIN Endereco "
+					+ "ON Eventos.codigoEndereco = Endereco.idEndereco "
+					+ "WHERE idEvento = ? ");
+			
+			stConsulta.setInt(1, id);
+			
+			rsResultado = stConsulta.executeQuery();
+			
+			if (rsResultado.next()) {
+				
+				Endereco endereco = instanciaEndereco(rsResultado);
+				
+				Eventos evento = instanciaEventos(rsResultado, endereco);
+				return evento;
+			}
+			
+			return null;
+			
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DbConexao.closeStatement(stConsulta);
+			DbConexao.closeResultSet(rsResultado);	
+		}
 	}
+	
+	
 
 	@Override
 	public List<Eventos> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PreparedStatement stConsulta = null;
+		ResultSet rsResultado = null;
+		
+		try {
+			stConsulta = conexao.prepareStatement(
+					"SELECT Eventos.* ,Endereco.* FROM Eventos INNER JOIN Endereco "
+					+ "ON Eventos.codigoEndereco = Endereco.idEndereco "
+					+ "ORDER BY nomeEvento");
+			
+			
+			rsResultado = stConsulta.executeQuery();
+			
+			List<Eventos> listEvento = new ArrayList<>();
+			Map<Integer, Endereco> map = new HashMap<>();
+			
+			while(rsResultado.next()) {
+				
+				Endereco pegaEndereco = map.get(rsResultado.getInt("codigoEndereco"));
+				
+				if (pegaEndereco == null) {
+					pegaEndereco = instanciaEndereco(rsResultado);
+					map.put(rsResultado.getInt("codigoEndereco"), pegaEndereco);
+				}
+				
+				Eventos evento = instanciaEventos(rsResultado, pegaEndereco);
+				listEvento.add(evento);
+			}
+			
+			return listEvento;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+			
+		} finally {
+			DbConexao.closeResultSet(rsResultado);
+			DbConexao.closeStatement(stConsulta);
+		}
+		
+	}
+	
+	
+	private Eventos instanciaEventos(ResultSet resultadoTab, Endereco endereco) throws SQLException {
+		
+		Eventos novoEvento = new Eventos();
+		
+		novoEvento.setIdEvento(resultadoTab.getInt("idEvento"));
+		novoEvento.setNomeEvento(resultadoTab.getString("nomeEvento"));
+		novoEvento.setDataEvento(resultadoTab.getDate("dataEvento"));
+		novoEvento.setHoraEvento(resultadoTab.getTime("horaEvento"));
+		novoEvento.setIngressos(resultadoTab.getInt("ingressos"));
+		novoEvento.setIngressoComprado(resultadoTab.getInt("ingressoComprado"));
+		novoEvento.setCategoria(resultadoTab.getString("categoria"));
+		novoEvento.setCodigoEndereco(endereco);
+		
+		return novoEvento;
+		
+	}
+	
+	
+	private Endereco instanciaEndereco(ResultSet resultadoTab) throws SQLException {
+		
+		Endereco novoEndereco = new Endereco();
+		
+		novoEndereco.setIdEndereco(resultadoTab.getInt("idEndereco"));
+		novoEndereco.setNomeLocal(resultadoTab.getString("nomeLocal"));
+		novoEndereco.setLogradouro(resultadoTab.getString("logradouro"));
+		novoEndereco.setNumLocal(resultadoTab.getString("numLocal"));
+		novoEndereco.setComplemento(resultadoTab.getString("complemento"));
+		novoEndereco.setBairro(resultadoTab.getString("bairro"));
+		novoEndereco.setLocalidade(resultadoTab.getString("localidade"));
+		novoEndereco.setUf(resultadoTab.getString("uf"));
+		novoEndereco.setCep(resultadoTab.getString("cep"));
+		novoEndereco.setDdd(resultadoTab.getString("ddd"));
+		novoEndereco.setIbge(resultadoTab.getString("ibge"));
+		novoEndereco.setGia(resultadoTab.getString("gia"));
+		novoEndereco.setSiafi(resultadoTab.getString("siafi"));
+		
+		return novoEndereco;
 	}
 	
 	

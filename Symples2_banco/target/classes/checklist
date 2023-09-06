@@ -22,4 +22,7 @@ Eventos
 	metodo para criar evento - OK
 	
 Banco de Dados
-	Criar um CRUD - FALTA
+	Criar um DAO - ok
+	
+ATENÇÂO: 
+	Olhar novamente sobre 'seller' para entender sobre metodo list<seller> com departement
