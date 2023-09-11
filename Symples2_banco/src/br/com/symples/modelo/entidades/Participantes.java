@@ -20,13 +20,13 @@ public class Participantes implements Serializable{
 	public Participantes() {}
 	
 	
-	public Participantes(Integer idParticipante, String nomeParticipante, String cpf, String email, Eventos evento) {
+	public Participantes(Integer idParticipante, String nomeParticipante, String cpf, String email, Eventos codigoEvento) {
 		super();
 		this.idParticipante = idParticipante;
 		this.nomeParticipante = nomeParticipante;
 		this.cpf = cpf;
 		this.email = email;
-		this.codigoEvento = evento;
+		this.codigoEvento = codigoEvento;
 	}
 
 	
@@ -105,7 +105,7 @@ public class Participantes implements Serializable{
 	@Override
 	public String toString() {
 		return "Participantes [idParticipante=" + idParticipante + ", nomeParticipante=" + nomeParticipante + ", cpf="
-				+ cpf + ", email=" + email + ", evento=" + codigoEvento +  "]";
+				+ cpf + ", email=" + email + ", codigoEevento=" + codigoEvento +  "]";
 	}
 	
 	
