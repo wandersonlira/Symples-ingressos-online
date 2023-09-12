@@ -1,3 +1,5 @@
+import java.util.List;
+
 import br.com.symples.modelo.dao.DaoFactory;
 import br.com.symples.modelo.dao.EventosDao;
 import br.com.symples.modelo.dao.ParticipantesDao;
@@ -162,27 +164,38 @@ public class Main {
 		EventosDao novoEvento = DaoFactory.createEventos();
 		
 		
+		Participantes participante = novoParticipante.findById(3);
 		
-		Eventos evento = new Eventos();
+		System.out.println(participante);
 		
-		evento =  novoEvento.findById(1);
-		
-		System.out.println(evento);
-		
-		Participantes participante = new Participantes(1, "Elon Musk", "00000000001", "bilionario.gmail.com", evento);
-		
-		novoParticipante.update(participante);
-		
-		
-		
-
-		
-//		Endereco endere = new Endereco();
+//		List<Participantes> listParticipante = novoParticipante.findAll();
 //		
-//		endere.setIdEndereco(3);
+//		for (Participantes participante : listParticipante) {
+//			System.out.println(participante);
+//		}
+		
+//		
+//		
 //		
 //		Eventos evento = new Eventos();
 //		
+//		evento =  novoEvento.findById(1);
+//		
+//		System.out.println(evento);
+//		
+//		Participantes participante = new Participantes(1, "Elon Musk", "00000000001", "bilionario.gmail.com", evento);
+//		
+//		novoParticipante.update(participante);
+		
+		
+
+//			-------------------------------------- Cria Evento -------------------------------------------------
+
+		
+//		Endereco endere = new Endereco();
+//		endere.setIdEndereco(1);
+		
+//		Eventos evento = new Eventos();
 //		evento.setNomeEvento("Nada tem");
 //		evento.setDataEvento(new Date());
 //		evento.setHoraEvento(new Time(0));
@@ -190,22 +203,32 @@ public class Main {
 //		evento.setIngressoComprado(0);
 //		evento.setCategoria("Excluir");
 //		evento.setCodigoEndereco(endere);
-//		evento.setIdEvento(1);
 //		
 //		novoEvento.insert(evento);
 		
 		
 		
+//        -------------------------------------- Lista Eventos -------------------------------------------------		
+		
+//		List<Eventos> listEvento = novoEvento.findAll();
+//		
+//		for (Eventos evento : listEvento) {
+//			System.out.println(evento);
+//		}
 		
 		
 		
 		
+//		 -------------------------------------- Cadastra Endereco -------------------------------------------------	
+		
+//		EnderecoDao novoEndereco = DaoFactory.createEndereco();
+//
 //		System.out.print("Local: ");
 //		String local = LeitorTeclado.getInputLine();
 //		
 //		
-//		System.out.print("numeroLocal: ");
-//		String numerolocal = LeitorTeclado.getInputLine();
+////		System.out.print("numeroLocal: ");
+////		String numerolocal = LeitorTeclado.getInputLine();
 //		
 //		ViacepService novoCep = new ViacepService();
 //		
@@ -215,7 +238,7 @@ public class Main {
 //			
 //			endereco =  novoCep.getEndereco("52211058");
 //			endereco.setNomeLocal(local);
-//			endereco.setNumLocal(numerolocal);
+////			endereco.setNumLocal(numerolocal);
 //			
 //			novoEndereco.insert(endereco);
 //			

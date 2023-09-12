@@ -5,10 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.symples.DbException;
 import br.com.symples.modelo.dao.ParticipantesDao;
+import br.com.symples.modelo.entidades.Endereco;
 import br.com.symples.modelo.entidades.Eventos;
 import br.com.symples.modelo.entidades.Participantes;
 import br.com.symples.service.DbConexao;
@@ -135,14 +139,97 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 
 	@Override
 	public Participantes findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		PreparedStatement stConsulta = null;
+		ResultSet rsResultado = null;
+		
+		try {
+			stConsulta = conexao.prepareStatement(
+					"SELECT * FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
+					+ "ON Participantes.codigoEvento = Eventos.idEvento "
+					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
+					+ "WHERE idParticipante = ? ");
+			
+			stConsulta.setInt(1, id);
+			
+			rsResultado = stConsulta.executeQuery();
+			
+			if (rsResultado.next()) {
+				
+				Endereco endereco = instanciaEndereco(rsResultado);
+				
+				Eventos evento = instanciaEventos(rsResultado, endereco);
+				
+				Participantes participante = instanciaParticipantes(rsResultado, evento);
+				return participante;
+			}
+			
+			return null;
+			
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DbConexao.closeStatement(stConsulta);
+			DbConexao.closeResultSet(rsResultado);	
+		}
+		
 	}
+	
+	
 
 	@Override
 	public List<Participantes> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement stConsulta = null;
+		ResultSet rsResultado = null;
+		
+		try {
+			stConsulta = conexao.prepareStatement(
+					"SELECT Participantes.* ,Eventos.* ,Endereco.* FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
+					+ "ON Participantes.codigoEvento = Eventos.idEvento AND Eventos.codigoEndereco = Endereco.idEndereco "
+					+ "ORDER BY nomeParticipante");
+			
+			
+			rsResultado = stConsulta.executeQuery();
+			
+			List<Participantes> listParticipante = new ArrayList<>();
+			List<Eventos> listEvento = new ArrayList<>();
+			Map<Integer, Eventos> mapEvento = new HashMap<>();
+			Map<Integer, Endereco> mapEndereco = new HashMap<>();
+			
+			while(rsResultado.next()) {
+				
+				Endereco pegaEndereco = mapEndereco.get(rsResultado.getInt("codigoEndereco"));
+				
+				if (pegaEndereco == null) {
+					pegaEndereco = instanciaEndereco(rsResultado);
+					mapEndereco.put(rsResultado.getInt("codigoEndereco"), pegaEndereco);
+				}
+				
+				Eventos evento = instanciaEventos(rsResultado, pegaEndereco);
+				listEvento.add(evento);
+				
+//		  --------------------------------------------------------------------------------------------
+				
+				Eventos pegaEvento = mapEvento.get(rsResultado.getInt("codigoEvento"));
+				
+				if (pegaEvento == null) {
+					pegaEvento = instanciaEventos(rsResultado, pegaEndereco);
+					mapEvento.put(rsResultado.getInt("codigoEvento"), pegaEvento);
+				}
+				
+				Participantes participante = instanciaParticipantes(rsResultado, pegaEvento);
+				listParticipante.add(participante);
+			}
+			
+			return listParticipante;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+			
+		} finally {
+			DbConexao.closeResultSet(rsResultado);
+			DbConexao.closeStatement(stConsulta);
+		}
 	}
 	
 	
@@ -161,7 +248,7 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 	}
 	
 	
-	private Eventos instanciaEventos(ResultSet resultadoTab) throws SQLException {
+	private Eventos instanciaEventos(ResultSet resultadoTab, Endereco endereco) throws SQLException {
 		Eventos novoEvento = new Eventos();
 		
 		novoEvento.setIdEvento(resultadoTab.getInt("idEvento"));
@@ -171,9 +258,31 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		novoEvento.setIngressos(resultadoTab.getInt("ingressos"));
 		novoEvento.setIngressoComprado(resultadoTab.getInt("ingressoComprado"));
 		novoEvento.setCategoria(resultadoTab.getString("categoria"));
-//		novoEvento.setCodigoEndereco(endereco);
+		novoEvento.setCodigoEndereco(endereco);
 		
 		return novoEvento;
+	}
+	
+	
+	private Endereco instanciaEndereco(ResultSet resultadoTab) throws SQLException {
+		
+		Endereco novoEndereco = new Endereco();
+		
+		novoEndereco.setIdEndereco(resultadoTab.getInt("idEndereco"));
+		novoEndereco.setNomeLocal(resultadoTab.getString("nomeLocal"));
+		novoEndereco.setLogradouro(resultadoTab.getString("logradouro"));
+		novoEndereco.setNumLocal(resultadoTab.getString("numLocal"));
+		novoEndereco.setComplemento(resultadoTab.getString("complemento"));
+		novoEndereco.setBairro(resultadoTab.getString("bairro"));
+		novoEndereco.setLocalidade(resultadoTab.getString("localidade"));
+		novoEndereco.setUf(resultadoTab.getString("uf"));
+		novoEndereco.setCep(resultadoTab.getString("cep"));
+		novoEndereco.setDdd(resultadoTab.getString("ddd"));
+		novoEndereco.setIbge(resultadoTab.getString("ibge"));
+		novoEndereco.setGia(resultadoTab.getString("gia"));
+		novoEndereco.setSiafi(resultadoTab.getString("siafi"));
+		
+		return novoEndereco;
 	}
 
 }

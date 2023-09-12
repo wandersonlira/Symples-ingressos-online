@@ -35,16 +35,16 @@ public class EventosDaoJDBC implements EventosDao{
 		try {
 			stConsulta = conexao.prepareStatement(
 					"INSERT INTO Eventos "
-					+ "(nomeEvento, dataEvento, horaEvento, ingressos, ingressoComprado, categoria, codigoEndereco) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "(nomeEvento, dataEvento, horaEvento, ingressos, categoria, codigoEndereco) "
+					+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			stConsulta.setString(1, objeto.getNomeEvento());
 			stConsulta.setDate(2, new java.sql.Date(objeto.getDataEvento().getTime()));
 			stConsulta.setTime(3, new java.sql.Time(objeto.getHoraEvento().getTime()));
 			stConsulta.setInt(4, objeto.getIngressos());
-			stConsulta.setInt(5, objeto.getIngressoComprado());
-			stConsulta.setString(6, objeto.getCategoria());
-			stConsulta.setInt(7, objeto.getCodigoEndereco().getIdEndereco());
+//			stConsulta.setInt(5, objeto.getIngressoComprado()); Coluna não usada no campo pois foi definido defult
+			stConsulta.setString(5, objeto.getCategoria());
+			stConsulta.setInt(6, objeto.getCodigoEndereco().getIdEndereco());
 			
 			int rowsAffected = stConsulta.executeUpdate();
 			
