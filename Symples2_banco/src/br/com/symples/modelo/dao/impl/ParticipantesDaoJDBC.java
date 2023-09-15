@@ -179,13 +179,15 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 
 	@Override
 	public List<Participantes> findAll() {
+		
 		PreparedStatement stConsulta = null;
 		ResultSet rsResultado = null;
 		
 		try {
 			stConsulta = conexao.prepareStatement(
 					"SELECT Participantes.* ,Eventos.* ,Endereco.* FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
-					+ "ON Participantes.codigoEvento = Eventos.idEvento AND Eventos.codigoEndereco = Endereco.idEndereco "
+					+ "ON Participantes.codigoEvento = Eventos.idEvento "
+					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
 					+ "ORDER BY nomeParticipante");
 			
 			
@@ -208,7 +210,7 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 				Eventos evento = instanciaEventos(rsResultado, pegaEndereco);
 				listEvento.add(evento);
 				
-//		  --------------------------------------------------------------------------------------------
+//		  ------------------ Cada tipo 'Evento' abaixo contém seu respectivo endereco acoplado na lista ----------------------
 				
 				Eventos pegaEvento = mapEvento.get(rsResultado.getInt("codigoEvento"));
 				
@@ -249,6 +251,7 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 	
 	
 	private Eventos instanciaEventos(ResultSet resultadoTab, Endereco endereco) throws SQLException {
+		
 		Eventos novoEvento = new Eventos();
 		
 		novoEvento.setIdEvento(resultadoTab.getInt("idEvento"));

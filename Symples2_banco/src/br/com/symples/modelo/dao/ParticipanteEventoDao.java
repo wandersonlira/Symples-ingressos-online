@@ -2,12 +2,14 @@ package br.com.symples.modelo.dao;
 
 import java.util.List;
 
+import br.com.symples.modelo.entidades.ParticipanteEvento;
+
 public interface ParticipanteEventoDao {
 	
-	void insert(ParticipanteEventoDao objeto);
-	void update(ParticipanteEventoDao objeto);
+	void insert(ParticipanteEvento objeto);
+	void update(ParticipanteEvento objeto);
 	void deleteById(Integer id);
-	ParticipanteEventoDao findById(Integer id);
-	List<ParticipanteEventoDao> findAll();
+	ParticipanteEvento findById(Integer id);
+	List<ParticipanteEvento> findAll();
 
 }

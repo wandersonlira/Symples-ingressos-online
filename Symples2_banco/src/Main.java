@@ -2,8 +2,9 @@ import java.util.List;
 
 import br.com.symples.modelo.dao.DaoFactory;
 import br.com.symples.modelo.dao.EventosDao;
+import br.com.symples.modelo.dao.ParticipanteEventoDao;
 import br.com.symples.modelo.dao.ParticipantesDao;
-import br.com.symples.modelo.entidades.Eventos;
+import br.com.symples.modelo.entidades.ParticipanteEvento;
 import br.com.symples.modelo.entidades.Participantes;
 
 public class Main {
@@ -160,13 +161,13 @@ public class Main {
 // ----------------------------------------------------------------------------------------------------------------------------------		
 		
 			
-		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
-		EventosDao novoEvento = DaoFactory.createEventos();
-		
-		
-		Participantes participante = novoParticipante.findById(3);
-		
-		System.out.println(participante);
+//		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
+//		EventosDao novoEvento = DaoFactory.createEventos();
+//		
+//		
+//		Participantes participante = novoParticipante.findById(3);
+//		
+//		System.out.println(participante);
 		
 //		List<Participantes> listParticipante = novoParticipante.findAll();
 //		
@@ -174,6 +175,11 @@ public class Main {
 //			System.out.println(participante);
 //		}
 		
+		ParticipanteEventoDao newParticipanteEvento = DaoFactory.createParticipanteEvento();
+		
+		newParticipanteEvento.deleteById(4);
+		
+
 //		
 //		
 //		
