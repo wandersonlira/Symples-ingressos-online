@@ -1,4 +1,4 @@
-package br.com.symples.modelo;
+package br.com.symples;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

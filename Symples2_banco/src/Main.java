@@ -4,6 +4,7 @@ import br.com.symples.modelo.dao.DaoFactory;
 import br.com.symples.modelo.dao.EventosDao;
 import br.com.symples.modelo.dao.ParticipanteEventoDao;
 import br.com.symples.modelo.dao.ParticipantesDao;
+import br.com.symples.modelo.entidades.Eventos;
 import br.com.symples.modelo.entidades.ParticipanteEvento;
 import br.com.symples.modelo.entidades.Participantes;
 
@@ -158,7 +159,7 @@ public class Main {
 //					
 //		} while (opcao != 0);
 		
-// ----------------------------------------------------------------------------------------------------------------------------------		
+// ----------------------------------------------- TESTANDO OS METODOS -----------------------------------------------------------------------------------		
 		
 			
 //		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
@@ -175,9 +176,6 @@ public class Main {
 //			System.out.println(participante);
 //		}
 		
-		ParticipanteEventoDao newParticipanteEvento = DaoFactory.createParticipanteEvento();
-		
-		newParticipanteEvento.deleteById(4);
 		
 
 //		
@@ -195,26 +193,52 @@ public class Main {
 		
 		
 
-//			-------------------------------------- Cria Evento -------------------------------------------------
-
+//			-------------------------------------- PARTICIPANTE-EVENTO-------------------------------------------------
+		
+		
+//		ParticipanteEventoDao novoParticipanteEvento = DaoFactory.createParticipanteEvento();
+//		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
 		
 //		Endereco endere = new Endereco();
 //		endere.setIdEndereco(1);
 		
+		
+//		------------ new Eventos -------------
 //		Eventos evento = new Eventos();
-//		evento.setNomeEvento("Nada tem");
-//		evento.setDataEvento(new Date());
-//		evento.setHoraEvento(new Time(0));
-//		evento.setIngressos(13);
-//		evento.setIngressoComprado(0);
-//		evento.setCategoria("Excluir");
-//		evento.setCodigoEndereco(endere);
+//		evento.setIdEvento(3);
 //		
-//		novoEvento.insert(evento);
+////		------------- new Participantes ----------------
+//		Participantes participante = new Participantes();
+//		participante.setIdParticipante(4);
+//		participante.setNomeParticipante("Renato Cariani");
+//		participante.setCpf("00000000003");
+//		participante.setEmail("cariani@peso.com");
+//		participante.setCodigoEvento(evento);
+//		
+//		novoParticipante.update(participante);
+//		
+////		----------------- new ParticipanteEvento -----------------
+//		ParticipanteEvento participanteEvento = new ParticipanteEvento();
+//		participanteEvento.setCodigo_idParticipante(participante);
+//		participanteEvento.setCodigo_idEvento(evento);
+//		participanteEvento.setId_ParticipanteEvento(5);
+//	
+//		novoParticipanteEvento.update(participanteEvento);
 		
 		
+//		----------------- Lista ParticipanteEvento -----------------
+//		ParticipanteEventoDao newParticipanteEvento = DaoFactory.createParticipanteEvento();
+//		
+//		List<ParticipanteEvento> listParticipanteEvento = newParticipanteEvento.findAll();
+//		
+//		for (ParticipanteEvento pv : listParticipanteEvento) {
+//			System.out.println(pv);
+//		}
 		
-//        -------------------------------------- Lista Eventos -------------------------------------------------		
+		
+//        -------------------------------------- Lista Eventos -------------------------------------------------	
+		
+		
 		
 //		List<Eventos> listEvento = novoEvento.findAll();
 //		
@@ -263,6 +287,7 @@ public class Main {
 //		for (Endereco objEndereco : listEnderecoTab) {
 //			System.out.println(objEndereco);
 //		}
+		
 		
 	}
 	

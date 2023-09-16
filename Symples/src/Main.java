@@ -1,4 +1,4 @@
-import br.com.symples.modelo.LeitorTeclado;
+import br.com.symples.LeitorTeclado;
 import br.com.symples.producao.Eventos;
 import br.com.symples.service.DbConexao;
 
