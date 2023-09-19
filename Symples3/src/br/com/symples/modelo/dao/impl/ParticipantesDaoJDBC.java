@@ -35,13 +35,13 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		
 		try {
 			stConsulta = conexao.prepareStatement(
-					"INSERT INTO Participantes (nomeParticipante, cpf, email, codigoEvento) "
-					+ "VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					"INSERT INTO Participantes (nomeParticipante, cpf, email) "
+					+ "VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			stConsulta.setString(1, objeto.getNomeParticipante());
 			stConsulta.setString(2, objeto.getCpf());
 			stConsulta.setString(3, objeto.getEmail());
-			stConsulta.setInt(4, objeto.getCodigoEventos().getIdEvento());
+//			stConsulta.setInt(4, objeto.getCodigoEventos().getIdEvento()); Não existe na Tabela "Participantes" a coluna 'CodigoEvento'
 			
 			int rowsAffected = stConsulta.executeUpdate();
 			
@@ -79,14 +79,14 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		try {
 			stConsulta = conexao.prepareStatement(
 					"UPDATE Participantes "
-					+ "SET nomeParticipante = ?, cpf = ?, email = ?, codigoEvento = ? "
+					+ "SET nomeParticipante = ?, cpf = ?, email = ? "
 					+ "WHERE idParticipante = ?");
 			
 			stConsulta.setString(1, objeto.getNomeParticipante());
 			stConsulta.setString(2, objeto.getCpf());
 			stConsulta.setString(3, objeto.getEmail());
-			stConsulta.setInt(4, objeto.getCodigoEventos().getIdEvento());
-			stConsulta.setInt(5, objeto.getIdParticipante());
+//			stConsulta.setInt(4, objeto.getCodigoEventos().getIdEvento()); Não existe na Tabela "Participantes" a coluna 'CodigoEvento'
+			stConsulta.setInt(4, objeto.getIdParticipante());
 			
 			int rowsAffected = stConsulta.executeUpdate();
 			

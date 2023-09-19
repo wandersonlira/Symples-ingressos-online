@@ -1,112 +1,72 @@
 package br.com.symples;
 
-//import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//import java.sql.Statement;
 import java.time.LocalDateTime;
 
 import Dao.CRUD;
-//import br.com.symples.service.DbConexao;
+import br.com.symples.modelo.dao.DaoFactory;
+import br.com.symples.modelo.dao.EventosDao;
+import br.com.symples.modelo.dao.ParticipanteEventoDao;
+import br.com.symples.modelo.dao.ParticipantesDao;
+import br.com.symples.modelo.entidades.TabEventos;
+import br.com.symples.modelo.entidades.TabParticipanteEvento;
+import br.com.symples.modelo.entidades.TabParticipantes;
 
 public class Ingressos{	
 	
 	private LocalDateTime timeLocalIngresso;
 
 	
-	private Integer insertParticipante() {
-			
-			Integer idParticipante = null;
-			
-			PreparedStatement consultaDataBase = null;
-			ResultSet resultadoConsulta = null;
+	private TabParticipantes insertParticipante() {
 		
-			try {
-				
-				CRUD crud = new CRUD();
-				consultaDataBase = crud.getInsert("participantes");
-				
-				System.out.print("Nome: ");
-				consultaDataBase.setString(1, LeitorTeclado.getInputLine());
-				
-				System.out.print("CPF: ");
-				consultaDataBase.setString(2, LeitorTeclado.getInputLine());
-				
-				System.out.print("Email: ");
-				consultaDataBase.setString(3, LeitorTeclado.getInputLine());
-				
-				this.timeLocalIngresso = LocalDateTime.now();
-				
-				int linhasAlteradas = consultaDataBase.executeUpdate();
-				
-				if (linhasAlteradas > 0) {
-					
-					resultadoConsulta = consultaDataBase.getGeneratedKeys();
-					
-					while (resultadoConsulta.next()) {
-						idParticipante = resultadoConsulta.getInt(1);
-						System.out.println("Done! ID = " + idParticipante);
-					}
-					
-				} else {
-						System.out.println("No rows affected!");
-					}
-				
-			} catch (SQLException e) {
-					e.printStackTrace();
-					
-				} 
-			
-			return idParticipante;
+		TabParticipantes tabParticipante = new TabParticipantes();
+		
+		System.out.print("Nome: ");
+		tabParticipante.setNomeParticipante(LeitorTeclado.getInputLine());
+		
+		System.out.print("CPF: ");
+		tabParticipante.setCpf(LeitorTeclado.getInputLine());
+		
+		System.out.print("Email: ");
+		tabParticipante.setEmail(LeitorTeclado.getInputLine());
+		
+		ParticipantesDao participanteDao = DaoFactory.createParticipantes();
+		participanteDao.insert(tabParticipante);
+		
+		return tabParticipante;
 			
 		}
 	
 
 
-	private void insertParticipanteEvento(Integer idParticipante, Integer codEvento) {
-			
-		PreparedStatement consultaDatabase = null;
-		ResultSet resultadoConsulta = null;
-		try {
-			
-			CRUD crud = new CRUD();
-			consultaDatabase = crud.InsertTableColum("participante_evento", "Codigo_id_participante", "Codigo_id_evento");
-				
-				consultaDatabase.setInt(1, idParticipante);
-				consultaDatabase.setInt(2, codEvento);
-			
-			int linhaAlterada = consultaDatabase.executeUpdate();
-			
-			if (linhaAlterada > 0) {
-				
-				resultadoConsulta = consultaDatabase.getGeneratedKeys();
-				
-				while (resultadoConsulta.next()) {
-					int id = resultadoConsulta.getInt(1);
-					System.out.println("DONE! affected: " + id);
-				}
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	private void insertParticipanteEvento(TabParticipantes objetoParticipante, TabEventos objetoEvento) {
+		
+		ParticipanteEventoDao participanteEventoDao = DaoFactory.createParticipanteEvento();
+		TabParticipanteEvento participanteEvento = new TabParticipanteEvento();
+		
+		participanteEvento.setCodigo_idParticipante(objetoParticipante);
+		participanteEvento.setCodigo_idEvento(objetoEvento);
+		
+		participanteEventoDao.insert(participanteEvento);
 		
 	}
 
 
-	public void cadastrarIngresso(Integer codEvento) {
+	public void cadastrarIngresso(TabEventos objetoEvento) {
 		
-		Integer idParticipante = insertParticipante();
-		System.out.println("-------------");
+//		ParticipantesDao participanteDao = DaoFactory.createParticipantes(); // talvez remover e deixar apenas em 'insertParticipante
+		TabParticipantes novoParticipante = insertParticipante();
 		
-		insertParticipanteEvento(idParticipante, codEvento);
-		System.out.println("-------------");
-		
-		ingressoComprado(idParticipante, codEvento);
+//		novoParticipante.setCodigoEvento(objetoEvento); // talvez remover pois não será necessário
+//		
+//		participanteDao.insert(novoParticipante); // talvez remover e deixar apenas em 'insertParticipante
+
+		insertParticipanteEvento(novoParticipante, objetoEvento);
 		
 	}	
 	
+//	--------------------------------- TERMINAR ESTA PARTE ABAIXO ----------------------------
 	
 	public void ingressoComprado(Integer idParticipante, Integer codEvento) {
 		
@@ -174,7 +134,22 @@ public class Ingressos{
 	public void setTimeLocalIngresso(LocalDateTime timeLocalIngresso) {
 		this.timeLocalIngresso = timeLocalIngresso;
 	}
+	
+	
+//	--------------- TESTE --------------------------
 
+	public static void main(String[] args) {
+		
+		Ingressos ingresso = new Ingressos();
+		EventosDao eventoDao = DaoFactory.createEventos();
+		TabEventos tabEvento = new TabEventos();
+		
+		tabEvento = eventoDao.findById(1);
+		
+		ingresso.cadastrarIngresso(tabEvento);
+
+		
+	}
 
 	
 }
