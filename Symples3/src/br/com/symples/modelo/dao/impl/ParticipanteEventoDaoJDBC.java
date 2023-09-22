@@ -144,6 +144,7 @@ public class ParticipanteEventoDaoJDBC implements ParticipanteEventoDao{
 				+ "SELECT * FROM ParticipanteEvento pe INNER JOIN Participantes p INNER JOIN Eventos ev INNER JOIN Endereco en "
 				+ "	ON pe.codigo_idParticipante = p.idParticipante "
 				+ "	AND pe.codigo_idEvento = ev.idEvento "
+				+ " AND ev.codigoEndereco = en.idEndereco "
 				+ "	WHERE id_ParticipanteEvento = ?");
 			
 			stConsulta.setInt(1, id);

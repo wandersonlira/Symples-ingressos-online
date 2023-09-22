@@ -1,70 +1,140 @@
-import java.sql.Date;
-import java.util.List;
+import java.sql.Time;
+import java.util.Date;
 
-import br.com.symples.modelo.dao.DaoFactory;
-import br.com.symples.modelo.dao.EventosDao;
+import br.com.symples.LeitorTeclado;
 import br.com.symples.modelo.entidades.TabEventos;
+import br.com.symples.modelo.entidades.TabParticipantes;
 import br.com.symples.producao.Eventos;
+import br.com.symples.service.DbConexao;
 
 public class Main {
 	
 
 	public static void main(String[] args) {
 		
-//		Integer opcao;
-//		
-//		do {
-//			
-//			System.out.println(
-//					"\n* ============ MENU =========== *\n\n"
-//			+	"[1] - Cadastrar Evento   \n"
-//			+	"[2] - Exibir Eventos     \n"
-//			+   "[3] - Comprar Ingresso   \n"
-//			+   "[4] - Imprimir Ingresso  \n"
-//			+   "[0] - Sair\n");
-//			
-//			System.out.print("Escolha uma Opção: ");
-//			opcao = LeitorTeclado.getInputInteger();
-//			LeitorTeclado.clearInput();
-//			
-//			switch (opcao) {
-//			
-//			case 1:				
-//				Eventos.criarEvento();			
-//				break;
-//				
-//			case 2:
-//				Eventos.exibirEventos();
-//				
-//				System.out.print("Comprar [sim]/[não]: ");
-//				String resposta = LeitorTeclado.getInputLine().toUpperCase().replace(" ", "");
-//				
-//				if (resposta.equals("SIM") == true) {
-//					Eventos.comprarIngresso();
-//				}
-//				break;
-//				
-//			case 3:
-//				Eventos.exibirEventos();
-//				Eventos.comprarIngresso();
-//				break;
-//				
-//			case 4:
-//				System.out.println("Opcão em desemvolvimento");
-//				break;
-//				
-//			default:
-//				if (opcao == 0) {
-//					System.out.println("\nATÉ LOGO!!");
-//					LeitorTeclado.closeInput();
-//					DbConexao.closeConexao();
-//					
-//				} else {
-//					System.out.println("\nOpcao invalida!! ");
-//					}
-//			}
-//				
-//			} while (opcao != 0);
+		Integer opcao;
+		
+		do {
+			
+			System.out.println(
+					"\n* ============ MENU =========== *\n\n"
+			+	"[1] - Cadastrar Evento   \n"
+			+	"[2] - Exibir Eventos     \n"
+			+   "[3] - Comprar Ingresso   \n"
+			+   "[4] - Imprimir Ingresso  \n"
+			+   "[0] - Sair\n"
+			);
+			
+			System.out.print("Escolha uma Opção: ");
+			opcao = LeitorTeclado.getInputInteger();
+			LeitorTeclado.clearInput();
+			
+			switch (opcao) {
+			
+			case 1:
+				
+				TabEventos novoEvento = new TabEventos();
+				String[] novoEndereco = new String[3];
+				
+				System.out.print("Nome Evento: ");
+				novoEvento.setNomeEvento(LeitorTeclado.getInputLine());
+				
+				System.out.print("Data Evento: ");		
+				novoEvento.setDataEvento(new Date());
+				
+				System.out.print("Hora Evento: ");
+				novoEvento.setHoraEvento(new Time(0));
+				
+				System.out.print("Qtd Ingressos: ");
+				novoEvento.setIngressos(LeitorTeclado.getInputInteger());
+				
+				System.out.print("Categoria: ");
+				LeitorTeclado.clearInput();
+				novoEvento.setCategoria(LeitorTeclado.getInputLine());
+				
+//				---------------- Captura Endereco ---------------
+				
+				System.out.print("Local: ");
+				novoEndereco[0] =  LeitorTeclado.getInputLine();
+				
+				System.out.print("numeroLocal: ");
+				novoEndereco[1] = LeitorTeclado.getInputLine();
+
+				System.out.print("CEP: ");
+				novoEndereco[2] = LeitorTeclado.getInputLine();
+				
+				Eventos.criarEvento(novoEvento, novoEndereco);
+				
+				break;
+				
+			case 2:
+				Eventos.exibirEventos();
+				
+				System.out.print("Comprar [sim]/[não]: ");
+				String resposta = LeitorTeclado.getInputLine().toUpperCase().replace(" ", "");
+				
+				if (resposta.equals("SIM") == true) {
+					
+					System.out.println("Digite codEvento: ");
+					Integer codEvento = LeitorTeclado.getInputInteger();
+					LeitorTeclado.clearInput();
+					
+					TabParticipantes novoParticipante = new TabParticipantes();
+					
+					
+					System.out.print("Nome: ");
+					novoParticipante.setNomeParticipante(LeitorTeclado.getInputLine());
+					
+					System.out.print("CPF: ");
+					novoParticipante.setCpf(LeitorTeclado.getInputLine());
+					
+					System.out.print("Email: ");
+					novoParticipante.setEmail(LeitorTeclado.getInputLine());
+					
+					Eventos.comprarIngresso(codEvento, novoParticipante);
+				}
+				
+				break;
+				
+			case 3:
+				Eventos.exibirEventos();
+				
+				System.out.println("Digite codEvento: ");
+				Integer codEvento = LeitorTeclado.getInputInteger();
+				LeitorTeclado.clearInput();
+				
+				TabParticipantes novoParticipante = new TabParticipantes();
+				
+				
+				System.out.print("Nome: ");
+				novoParticipante.setNomeParticipante(LeitorTeclado.getInputLine());
+				
+				System.out.print("CPF: ");
+				novoParticipante.setCpf(LeitorTeclado.getInputLine());
+				
+				System.out.print("Email: ");
+				novoParticipante.setEmail(LeitorTeclado.getInputLine());
+				
+				Eventos.comprarIngresso(codEvento, novoParticipante);
+				
+				break;
+				
+			case 4:
+				System.out.println("Opcão em desemvolvimento");
+				break;
+				
+			default:
+				if (opcao == 0) {
+					System.out.println("\nATÉ LOGO!!");
+					LeitorTeclado.closeInput();
+					DbConexao.closeConexao();
+					
+				} else {
+					System.out.println("\nOpcao invalida!! ");
+					}
+			}
+				
+			} while (opcao != 0);
 		
 		
 		
@@ -158,19 +228,19 @@ public class Main {
 //		} while (opcao != 0);
 		
 // ----------------------------------------------- TESTANDO OS METODOS -----------------------------------------------------------------------------------		
-		
+	
+//		------------------------------------------ PARTICIPANTES ---------------------------------------------------
 			
 //		ParticipantesDao novoParticipante = DaoFactory.createParticipantes();
-//		EventosDao novoEvento = DaoFactory.createEventos();
-//		
-//		
-//		Participantes participante = novoParticipante.findById(3);
-//		
+
+	
+//		TabParticipantes participante = novoParticipante.findById(3);
+//	
 //		System.out.println(participante);
 		
-//		List<Participantes> listParticipante = novoParticipante.findAll();
-//		
-//		for (Participantes participante : listParticipante) {
+//		List<TabParticipantes> listParticipante = novoParticipante.findAll();
+//	
+//		for (TabParticipantes participante : listParticipante) {
 //			System.out.println(participante);
 //		}
 		
@@ -236,13 +306,14 @@ public class Main {
 		
 //        -------------------------------------- Lista Eventos -------------------------------------------------	
 		
-		EventosDao novoEvento = DaoFactory.createEventos();
+//		EventosDao novoEvento = DaoFactory.createEventos();
+//		
+//		List<TabEventos> listEvento = novoEvento.findAll();
+//		
+//		for (TabEventos evento : listEvento) {
+//			System.out.println(evento);
+//		}
 		
-		List<TabEventos> listEvento = novoEvento.findAll();
-		
-		for (TabEventos evento : listEvento) {
-			System.out.println(evento);
-		}
 		
 		
 		

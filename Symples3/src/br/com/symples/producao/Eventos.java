@@ -1,84 +1,91 @@
 package br.com.symples.producao;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
 import br.com.symples.Ingressos;
-import br.com.symples.LeitorTeclado;
 import br.com.symples.modelo.dao.DaoFactory;
 import br.com.symples.modelo.dao.EnderecoDao;
 import br.com.symples.modelo.dao.EventosDao;
 import br.com.symples.modelo.entidades.TabEndereco;
 import br.com.symples.modelo.entidades.TabEventos;
+import br.com.symples.modelo.entidades.TabParticipantes;
 import br.com.symples.service.ViacepService;
 
 
 public class Eventos {
 	
 	public static TabEndereco enderecoEvento;
+	private static TabEventos tabEventos;
+	
 
 
-	private static TabEventos insereEvento() {
+//	private static TabEventos insereEvento() {
+	private static void insereEvento(TabEventos objetoEvento) {
 		
 		
 //		SimpleDateFormat formatoDate = new SimpleDateFormat("dd/MM/yyyy");
 		
-		TabEventos novoEvento = new TabEventos();
+//		TabEventos novoEvento = new TabEventos();
+		tabEventos = new TabEventos();
 		
-		System.out.print("Nome Evento: ");
-		novoEvento.setNomeEvento(LeitorTeclado.getInputLine());
+//		System.out.print("Nome Evento: ");
+//		novoEvento.setNomeEvento(LeitorTeclado.getInputLine());
+		tabEventos.setNomeEvento(objetoEvento.getNomeEvento());
 		
-		System.out.print("Data Evento: ");		
-		novoEvento.setDataEvento(new Date());
+//		System.out.print("Data Evento: ");		
+//		novoEvento.setDataEvento(new Date());
+		tabEventos.setDataEvento(objetoEvento.getDataEvento());
 		
-		System.out.print("Hora Evento: ");
-		novoEvento.setHoraEvento(new Time(0));
+//		System.out.print("Hora Evento: ");
+//		novoEvento.setHoraEvento(new Time(0));
+		tabEventos.setHoraEvento(objetoEvento.getHoraEvento());
 		
-		System.out.print("Qtd Ingressos: ");
-		novoEvento.setIngressos(LeitorTeclado.getInputInteger());
+//		System.out.print("Qtd Ingressos: ");
+//		novoEvento.setIngressos(LeitorTeclado.getInputInteger());
+		tabEventos.setIngressos(objetoEvento.getIngressos());
 		
-		System.out.print("Categoria: ");
-		LeitorTeclado.clearInput();
-		novoEvento.setCategoria(LeitorTeclado.getInputLine());
+//		System.out.print("Categoria: ");
+//		LeitorTeclado.clearInput();
+//		novoEvento.setCategoria(LeitorTeclado.getInputLine());
+		tabEventos.setCategoria(objetoEvento.getCategoria());
 		
-		
-		return novoEvento;
+//		return novoEvento;
 		
 	}
 	
 	
 	
-	private static TabEndereco insereEndereco() {
+//	private static TabEndereco insereEndereco() {
+	private static void insereEndereco(String[] novoEndereco) {
 		
-		EnderecoDao novoEndereco = DaoFactory.createEndereco();
+		EnderecoDao novoEnderecoDao = DaoFactory.createEndereco();
 		
-		System.out.print("Local: ");
-		LeitorTeclado.clearInput();
-		String nomeLocal = LeitorTeclado.getInputLine();
-		
-		System.out.print("numeroLocal: ");
-		String numerolocal = LeitorTeclado.getInputLine();
-
-		System.out.print("CEP: ");
-		String cepCadastro = LeitorTeclado.getInputLine();
+//		System.out.print("Local: ");
+//		LeitorTeclado.clearInput();
+//		String nomeLocal = LeitorTeclado.getInputLine();
+//		
+//		System.out.print("numeroLocal: ");
+//		String numerolocal = LeitorTeclado.getInputLine();
+//
+//		System.out.print("CEP: ");
+//		String cepCadastro = LeitorTeclado.getInputLine();
 		
 		try {
 			ViacepService apiCep = new ViacepService();
 
-			enderecoEvento = apiCep.getEndereco(cepCadastro);
-			enderecoEvento.setNomeLocal(nomeLocal);
-			enderecoEvento.setNumLocal(numerolocal);
+			enderecoEvento = apiCep.getEndereco(novoEndereco[2]);
+			enderecoEvento.setNomeLocal(novoEndereco[0]);
+			enderecoEvento.setNumLocal(novoEndereco[1]);
 
-			novoEndereco.insert(enderecoEvento);
+			novoEnderecoDao.insert(enderecoEvento);
 			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -88,19 +95,21 @@ public class Eventos {
 			
 		}
 		
-		return enderecoEvento;
-		
-		
+//		return enderecoEvento;
+			
 	}
 	
 	
-	private static void cadastraEvento() {
+	private static void cadastraEvento(TabEventos objetoEvento, String[] novoEndereco) {
 		
 		
-		TabEventos tabEventos = insereEvento();
-		TabEndereco tabEdenreco = insereEndereco();
+//		TabEventos tabEventos = insereEvento();
+		insereEvento(objetoEvento);
 		
-		tabEventos.setCodigoEndereco(tabEdenreco);
+//		TabEndereco tabEdenreco = insereEndereco();
+		insereEndereco(novoEndereco);
+		
+		tabEventos.setCodigoEndereco(enderecoEvento);
 		
 		EventosDao eventosDao = DaoFactory.createEventos();
 		eventosDao.insert(tabEventos);
@@ -108,9 +117,9 @@ public class Eventos {
 	}
 	
 	
-	public static void criarEvento() {
+	public static void criarEvento(TabEventos objetoEvento, String[] novoEndereco) {
 
-		cadastraEvento();	
+		cadastraEvento(objetoEvento, novoEndereco);	
 	}
 
 
@@ -174,7 +183,7 @@ public class Eventos {
 	
 	
 	
-	public static void comprarIngresso(Integer codEvento) {
+	public static void comprarIngresso(Integer codEvento, TabParticipantes novoParticipante) {
 		
 		EventosDao eventoDao = DaoFactory.createEventos();
 		TabEventos tabEventos = new TabEventos();
@@ -184,7 +193,7 @@ public class Eventos {
 		if (tabEventos.getIngressoComprado() < tabEventos.getIngressos()) {
 			
 			Ingressos ingresso = new Ingressos();
-			ingresso.cadastrarIngresso(tabEventos);
+			ingresso.cadastrarIngresso(tabEventos, novoParticipante);
 			
 			int novoIngresso = (tabEventos.getIngressoComprado() + 1);
 			
@@ -200,5 +209,6 @@ public class Eventos {
 			}	
 
 	}
+
 	
 }

@@ -136,7 +136,10 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 	}
 	
 	
-
+/*			Os comentários destas linhas era referente ao funcionamento anterior no qual a tabela 'TabParticipantes' 
+			tinha um campo "ManToOne" com TabEventos. Portanto reajustamos o código onde as linhas desnecessária
+			foi comentado para futura exclusão.
+*/
 	@Override
 	public TabParticipantes findById(Integer id) {
 		
@@ -145,10 +148,13 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		
 		try {
 			stConsulta = conexao.prepareStatement(
-					"SELECT * FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
-					+ "ON Participantes.codigoEvento = Eventos.idEvento "
-					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
+					"SELECT * FROM Participantes "
 					+ "WHERE idParticipante = ? ");
+			
+//					"SELECT * FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
+//					+ "ON Participantes.codigoEvento = Eventos.idEvento "
+//					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
+//					+ "WHERE idParticipante = ? ");
 			
 			stConsulta.setInt(1, id);
 			
@@ -156,11 +162,11 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 			
 			if (rsResultado.next()) {
 				
-				TabEndereco endereco = instanciaEndereco(rsResultado);
+//				TabEndereco endereco = instanciaEndereco(rsResultado);
 				
-				TabEventos evento = instanciaEventos(rsResultado, endereco);
+//				TabEventos evento = instanciaEventos(rsResultado, endereco);
 				
-				TabParticipantes participante = instanciaParticipantes(rsResultado, evento);
+				TabParticipantes participante = instanciaParticipantes(rsResultado/*, evento*/);
 				return participante;
 			}
 			
@@ -176,7 +182,11 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 	}
 	
 	
-
+	
+/*			Os comentários destas linhas era referente ao funcionamento anterior no qual a tabela 'TabParticipantes' 
+			tinha um campo "ManToOne" com TabEventos. Portanto reajustamos o código onde as linhas desnecessária
+			foi comentado para futura exclusão.
+*/
 	@Override
 	public List<TabParticipantes> findAll() {
 		
@@ -185,41 +195,45 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		
 		try {
 			stConsulta = conexao.prepareStatement(
-					"SELECT Participantes.* ,Eventos.* ,Endereco.* FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
-					+ "ON Participantes.codigoEvento = Eventos.idEvento "
-					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
+					"SELECT Participantes.* FROM Participantes "
 					+ "ORDER BY nomeParticipante");
+			
+//					"SELECT Participantes.* ,Eventos.* ,Endereco.* FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
+//					+ "ON Participantes.codigoEvento = Eventos.idEvento "
+//					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
+//					+ "ORDER BY nomeParticipante");
 			
 			
 			rsResultado = stConsulta.executeQuery();
 			
 			List<TabParticipantes> listParticipante = new ArrayList<>();
-			List<TabEventos> listEvento = new ArrayList<>();
-			Map<Integer, TabEventos> mapEvento = new HashMap<>();
-			Map<Integer, TabEndereco> mapEndereco = new HashMap<>();
+			
+//			List<TabEventos> listEvento = new ArrayList<>();
+//			Map<Integer, TabEventos> mapEvento = new HashMap<>();
+//			Map<Integer, TabEndereco> mapEndereco = new HashMap<>();
 			
 			while(rsResultado.next()) {
 				
-				TabEndereco pegaEndereco = mapEndereco.get(rsResultado.getInt("codigoEndereco"));
+//				TabEndereco pegaEndereco = mapEndereco.get(rsResultado.getInt("codigoEndereco"));
+//				
+//				if (pegaEndereco == null) {
+//					pegaEndereco = instanciaEndereco(rsResultado);
+//					mapEndereco.put(rsResultado.getInt("codigoEndereco"), pegaEndereco);
+//				}
+//				
+//				TabEventos evento = instanciaEventos(rsResultado, pegaEndereco);
+//				listEvento.add(evento);
+//				
+////		  ------------------ Cada tipo 'Evento' abaixo contém seu respectivo endereco acoplado na lista ----------------------
+//				
+//				TabEventos pegaEvento = mapEvento.get(rsResultado.getInt("codigoEvento"));
+//				
+//				if (pegaEvento == null) {
+//					pegaEvento = instanciaEventos(rsResultado, pegaEndereco);
+//					mapEvento.put(rsResultado.getInt("codigoEvento"), pegaEvento);
+//				}
 				
-				if (pegaEndereco == null) {
-					pegaEndereco = instanciaEndereco(rsResultado);
-					mapEndereco.put(rsResultado.getInt("codigoEndereco"), pegaEndereco);
-				}
-				
-				TabEventos evento = instanciaEventos(rsResultado, pegaEndereco);
-				listEvento.add(evento);
-				
-//		  ------------------ Cada tipo 'Evento' abaixo contém seu respectivo endereco acoplado na lista ----------------------
-				
-				TabEventos pegaEvento = mapEvento.get(rsResultado.getInt("codigoEvento"));
-				
-				if (pegaEvento == null) {
-					pegaEvento = instanciaEventos(rsResultado, pegaEndereco);
-					mapEvento.put(rsResultado.getInt("codigoEvento"), pegaEvento);
-				}
-				
-				TabParticipantes participante = instanciaParticipantes(rsResultado, pegaEvento);
+				TabParticipantes participante = instanciaParticipantes(rsResultado/*, pegaEvento*/);
 				listParticipante.add(participante);
 			}
 			
@@ -235,7 +249,7 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 	}
 	
 	
-	private TabParticipantes instanciaParticipantes(ResultSet resultadoTab, TabEventos eventos) throws SQLException {
+	private TabParticipantes instanciaParticipantes(ResultSet resultadoTab/*, TabEventos eventos*/) throws SQLException {
 		
 		TabParticipantes novoParticipante = new TabParticipantes();
 		
@@ -243,13 +257,19 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		novoParticipante.setNomeParticipante(resultadoTab.getString("nomeParticipante"));
 		novoParticipante.setCpf(resultadoTab.getString("cpf"));
 		novoParticipante.setEmail(resultadoTab.getString("email")); 
-		novoParticipante.setCodigoEvento(eventos);
+//		novoParticipante.setCodigoEvento(eventos);
 		
 		return novoParticipante;
 		
 	}
 	
-	
+
+/*			Os comentários destas linhas era referente ao funcionamento anterior no qual a tabela 'TabParticipantes' 
+			tinha um campo "ManToOne" com TabEventos. Portanto reajustamos o código onde as linhas desnecessária
+			foi comentado para futura exclusão.
+*/
+
+/*	
 	private TabEventos instanciaEventos(ResultSet resultadoTab, TabEndereco endereco) throws SQLException {
 		
 		TabEventos novoEvento = new TabEventos();
@@ -287,5 +307,8 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		
 		return novoEndereco;
 	}
+	
+*/
 
+	
 }

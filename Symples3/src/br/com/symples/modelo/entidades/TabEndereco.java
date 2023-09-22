@@ -26,7 +26,7 @@ public class TabEndereco implements Serializable{
 	  private String ddd;
 	  private String siafi;
 	  
-	  private Integer idEndereco = null;
+	  private Integer idEndereco;
 	  private String nomeLocal;
 	  private String numLocal;
 	  

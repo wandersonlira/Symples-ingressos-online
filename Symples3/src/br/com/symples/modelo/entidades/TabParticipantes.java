@@ -13,20 +13,20 @@ public class TabParticipantes implements Serializable{
 	private String nomeParticipante;
 	private String cpf;
 	private String email;
-	private TabEventos codigoEvento;
+//	private TabEventos codigoEvento;
 	
 	
 	
 	public TabParticipantes() {}
 	
 	
-	public TabParticipantes(Integer idParticipante, String nomeParticipante, String cpf, String email, TabEventos codigoEvento) {
+	public TabParticipantes(Integer idParticipante, String nomeParticipante, String cpf, String email/*, TabEventos codigoEvento*/) {
 		super();
 		this.idParticipante = idParticipante;
 		this.nomeParticipante = nomeParticipante;
 		this.cpf = cpf;
 		this.email = email;
-		this.codigoEvento = codigoEvento;
+//		this.codigoEvento = codigoEvento;
 	}
 
 	
@@ -91,21 +91,21 @@ public class TabParticipantes implements Serializable{
 	}
 
 
-	public TabEventos getCodigoEventos() {
-		return codigoEvento;
-	}
-
-
-	public void setCodigoEvento(TabEventos evento) {
-		this.codigoEvento = evento;
-	}
+//	public TabEventos getCodigoEventos() {
+//		return codigoEvento;
+//	}
+//
+//
+//	public void setCodigoEvento(TabEventos evento) {
+//		this.codigoEvento = evento;
+//	}
 
 	
 	
 	@Override
 	public String toString() {
 		return "Participantes [idParticipante=" + idParticipante + ", nomeParticipante=" + nomeParticipante + ", cpf="
-				+ cpf + ", email=" + email + ", codigoEevento=" + codigoEvento +  "]";
+				+ cpf + ", email=" + email + /* ", codigoEevento=" + codigoEvento  + */ "]";
 	}
 	
 	

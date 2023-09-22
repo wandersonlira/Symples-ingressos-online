@@ -26,3 +26,10 @@ Banco de Dados
 	
 ATENÇÂO: 
 	Olhar novamente sobre 'seller' para entender sobre metodo list<seller> com departement
+	
+	
+Validação:
+	Validação Participante(mesmo Dados) - FALTA
+	validação Evento(Data/hora) - FALTA
+	Validação Endereco - FALTA
+	Validação Endereco (CEP não encontrado) - FALTA
