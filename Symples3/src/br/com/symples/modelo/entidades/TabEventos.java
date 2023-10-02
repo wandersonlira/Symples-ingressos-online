@@ -2,7 +2,6 @@ package br.com.symples.modelo.entidades;
 
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ public class TabEventos implements Serializable{
 	private Integer idEvento;
 	private String nomeEvento;
 	private Date dataEvento;
-	private Time horaEvento;
+	private String horaEvento;
 	private Integer ingressos;
 	private Integer ingressoComprado;
 	private String categoria;
@@ -24,7 +23,7 @@ public class TabEventos implements Serializable{
 	public TabEventos() {}
 	
 	
-	public TabEventos(Integer idEvento, String nomeEvento, Date dataEvento, Time horaEvento, Integer ingressos,
+	public TabEventos(Integer idEvento, String nomeEvento, Date dataEvento, String horaEvento, Integer ingressos,
 			Integer ingressoComprado, String categoria, TabEndereco codigoEndereco) {
 		super();
 		this.idEvento = idEvento;
@@ -83,11 +82,11 @@ public class TabEventos implements Serializable{
 		this.dataEvento = dataEvento;
 	}
 
-	public Time getHoraEvento() {
+	public String getHoraEvento() {
 		return horaEvento;
 	}
 
-	public void setHoraEvento(Time horaEvento) {
+	public void setHoraEvento(String horaEvento) {
 		this.horaEvento = horaEvento;
 	}
 

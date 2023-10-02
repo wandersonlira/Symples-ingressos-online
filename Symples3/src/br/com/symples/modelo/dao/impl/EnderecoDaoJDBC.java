@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.symples.DbException;
+import br.com.symples.exception.DbException;
 import br.com.symples.modelo.dao.EnderecoDao;
 import br.com.symples.modelo.entidades.TabEndereco;
 import br.com.symples.service.DbConexao;
@@ -42,7 +42,7 @@ public class EnderecoDaoJDBC implements EnderecoDao{
 			stConsulta.setString(5, objeto.getBairro());
 			stConsulta.setString(6, objeto.getLocalidade());
 			stConsulta.setString(7, objeto.getUf());
-			stConsulta.setString(8, objeto.getCep());
+			stConsulta.setString(8, objeto.getCep().replace("-", ""));
 			stConsulta.setString(9, objeto.getDdd());
 			stConsulta.setString(10, objeto.getIbge());
 			stConsulta.setString(11, objeto.getGia());
@@ -96,7 +96,7 @@ public class EnderecoDaoJDBC implements EnderecoDao{
 			stConsulta.setString(5, objeto.getBairro());
 			stConsulta.setString(6, objeto.getLocalidade());
 			stConsulta.setString(7, objeto.getUf());
-			stConsulta.setString(8, objeto.getCep());
+			stConsulta.setString(8, objeto.getCep().replace("-", ""));
 			stConsulta.setString(9, objeto.getDdd());
 			stConsulta.setString(10, objeto.getIbge());
 			stConsulta.setString(11, objeto.getGia());
@@ -148,7 +148,7 @@ public class EnderecoDaoJDBC implements EnderecoDao{
 	
 
 	@Override
-	public TabEndereco findById(Integer id) {
+	public TabEndereco findByCep(String cep) {
 		
 		PreparedStatement stConsulta = null;
 		ResultSet rsResultado = null;
@@ -156,10 +156,9 @@ public class EnderecoDaoJDBC implements EnderecoDao{
 		try {
 			stConsulta = conexao.prepareStatement(
 					"SELECT * FROM Endereco "
-					+ "WHERE idEndereco = ? "
-					+ "ORDER BY logradouro");
+					+ "WHERE cep = ? ");
 			
-			stConsulta.setInt(1, id);
+			stConsulta.setString(1, cep);
 			
 			rsResultado = stConsulta.executeQuery();
 			

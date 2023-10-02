@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.symples.DbException;
+import br.com.symples.exception.DbException;
 import br.com.symples.modelo.dao.ParticipantesDao;
 import br.com.symples.modelo.entidades.TabEndereco;
 import br.com.symples.modelo.entidades.TabEventos;
@@ -141,7 +141,7 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 			foi comentado para futura exclusão.
 */
 	@Override
-	public TabParticipantes findById(Integer id) {
+	public TabParticipantes findByCPF(String cpf) {
 		
 		PreparedStatement stConsulta = null;
 		ResultSet rsResultado = null;
@@ -149,14 +149,14 @@ public class ParticipantesDaoJDBC implements ParticipantesDao{
 		try {
 			stConsulta = conexao.prepareStatement(
 					"SELECT * FROM Participantes "
-					+ "WHERE idParticipante = ? ");
+					+ "WHERE cpf = ? ");
 			
 //					"SELECT * FROM Participantes INNER JOIN Eventos INNER JOIN Endereco "
 //					+ "ON Participantes.codigoEvento = Eventos.idEvento "
 //					+ "AND Eventos.codigoEndereco = Endereco.idEndereco "
 //					+ "WHERE idParticipante = ? ");
 			
-			stConsulta.setInt(1, id);
+			stConsulta.setString(1, cpf);
 			
 			rsResultado = stConsulta.executeQuery();
 			

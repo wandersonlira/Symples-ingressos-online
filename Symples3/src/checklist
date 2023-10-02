@@ -29,7 +29,7 @@ ATENÇÂO:
 	
 	
 Validação:
-	Validação Participante(mesmo Dados) - FALTA
-	validação Evento(Data/hora) - FALTA
-	Validação Endereco - FALTA
-	Validação Endereco (CEP não encontrado) - FALTA
+	Validação Participante(mesmo Dados) - OK
+	validação Evento(Data/hora) - OK
+	Validação Endereco - OK
+	Validação Endereco (Inserir manual CEP não encontrado) - FALTA

@@ -7,7 +7,7 @@ import br.com.symples.modelo.entidades.TabEndereco;
 	public interface EnderecoDao {void insert(TabEndereco objeto);
 	void update(TabEndereco objeto);
 	void deleteById(Integer id);
-	TabEndereco findById(Integer id);
+	TabEndereco findByCep(String cep);
 	List<TabEndereco> findAll();
 	
 }

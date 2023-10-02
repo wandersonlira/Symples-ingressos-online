@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.symples.DbException;
+import br.com.symples.exception.DbException;
 import br.com.symples.modelo.dao.ParticipanteEventoDao;
 import br.com.symples.modelo.entidades.TabEndereco;
 import br.com.symples.modelo.entidades.TabEventos;
@@ -292,7 +292,7 @@ public class ParticipanteEventoDaoJDBC implements ParticipanteEventoDao{
 		novoEvento.setIdEvento(resultadoTab.getInt("idEvento"));
 		novoEvento.setNomeEvento(resultadoTab.getString("nomeEvento"));
 		novoEvento.setDataEvento(resultadoTab.getDate("dataEvento"));
-		novoEvento.setHoraEvento(resultadoTab.getTime("horaEvento"));
+		novoEvento.setHoraEvento(resultadoTab.getString("horaEvento"));
 		novoEvento.setIngressos(resultadoTab.getInt("ingressos"));
 		novoEvento.setIngressoComprado(resultadoTab.getInt("ingressoComprado"));
 		novoEvento.setCategoria(resultadoTab.getString("categoria"));

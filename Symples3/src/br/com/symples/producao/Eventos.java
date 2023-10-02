@@ -22,7 +22,7 @@ import br.com.symples.service.ViacepService;
 
 public class Eventos {
 	
-	public static TabEndereco enderecoEvento;
+	private static TabEndereco enderecoEvento;
 	private static TabEventos tabEventos;
 	
 
@@ -63,39 +63,36 @@ public class Eventos {
 	
 	
 	
-//	private static TabEndereco insereEndereco() {
 	private static void insereEndereco(String[] novoEndereco) {
 		
 		EnderecoDao novoEnderecoDao = DaoFactory.createEndereco();
+		TabEndereco findEndereco = novoEnderecoDao.findByCep(novoEndereco[2]); // 'novoEndereco[2]' contém a String com o Cep
 		
-//		System.out.print("Local: ");
-//		LeitorTeclado.clearInput();
-//		String nomeLocal = LeitorTeclado.getInputLine();
-//		
-//		System.out.print("numeroLocal: ");
-//		String numerolocal = LeitorTeclado.getInputLine();
-//
-//		System.out.print("CEP: ");
-//		String cepCadastro = LeitorTeclado.getInputLine();
-		
-		try {
-			ViacepService apiCep = new ViacepService();
-
-			enderecoEvento = apiCep.getEndereco(novoEndereco[2]);
-			enderecoEvento.setNomeLocal(novoEndereco[0]);
-			enderecoEvento.setNumLocal(novoEndereco[1]);
-
-			novoEnderecoDao.insert(enderecoEvento);
+		if (findEndereco != null) {
+			System.out.println("Diferente de NULL");
+			enderecoEvento = findEndereco;
+			System.out.println("Existe Endereco: " + enderecoEvento);
 			
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+		} else {
+			System.out.println("Igual a NULL");
 			
-		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				ViacepService findCep = new ViacepService();
+	
+				enderecoEvento = findCep.getEndereco(novoEndereco[2]);
+				enderecoEvento.setNomeLocal(novoEndereco[0]);
+				enderecoEvento.setNumLocal(novoEndereco[1]);
+	
+				novoEnderecoDao.insert(enderecoEvento);
 			
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			
+			} catch (IOException e) {
+				e.printStackTrace();
+			
+			}
 		}
-		
-//		return enderecoEvento;
 			
 	}
 	

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.symples.DbException;
+import br.com.symples.exception.DbException;
 import br.com.symples.modelo.dao.EventosDao;
 import br.com.symples.modelo.entidades.TabEndereco;
 import br.com.symples.modelo.entidades.TabEventos;
@@ -40,7 +40,7 @@ public class EventosDaoJDBC implements EventosDao{
 			
 			stConsulta.setString(1, objeto.getNomeEvento());
 			stConsulta.setDate(2, new java.sql.Date(objeto.getDataEvento().getTime()));
-			stConsulta.setTime(3, new java.sql.Time(objeto.getHoraEvento().getTime()));
+			stConsulta.setString(3, objeto.getHoraEvento());
 			stConsulta.setInt(4, objeto.getIngressos());
 //			stConsulta.setInt(5, objeto.getIngressoComprado()); Coluna não usada no campo pois foi definido defult
 			stConsulta.setString(5, objeto.getCategoria());
@@ -86,7 +86,7 @@ public class EventosDaoJDBC implements EventosDao{
 			
 			stConsulta.setString(1, objeto.getNomeEvento());
 			stConsulta.setDate(2, new java.sql.Date(objeto.getDataEvento().getTime()));
-			stConsulta.setTime(3, new java.sql.Time(objeto.getHoraEvento().getTime()));
+			stConsulta.setString(3, objeto.getHoraEvento());
 			stConsulta.setInt(4, objeto.getIngressos());
 			stConsulta.setInt(5, objeto.getIngressoComprado());
 			stConsulta.setString(6, objeto.getCategoria());
@@ -228,7 +228,7 @@ public class EventosDaoJDBC implements EventosDao{
 		novoEvento.setIdEvento(resultadoTab.getInt("idEvento"));
 		novoEvento.setNomeEvento(resultadoTab.getString("nomeEvento"));
 		novoEvento.setDataEvento(resultadoTab.getDate("dataEvento"));
-		novoEvento.setHoraEvento(resultadoTab.getTime("horaEvento"));
+		novoEvento.setHoraEvento(resultadoTab.getString("horaEvento"));
 		novoEvento.setIngressos(resultadoTab.getInt("ingressos"));
 		novoEvento.setIngressoComprado(resultadoTab.getInt("ingressoComprado"));
 		novoEvento.setCategoria(resultadoTab.getString("categoria"));
