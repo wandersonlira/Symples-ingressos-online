@@ -1,4 +1,4 @@
-package br.com.symples.producao;
+package controller.producao;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -8,15 +8,17 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.apache.http.client.ClientProtocolException;
 
-import br.com.symples.modelo.dao.DaoFactory;
-import br.com.symples.modelo.dao.EnderecoDao;
-import br.com.symples.modelo.dao.EventosDao;
-import br.com.symples.modelo.entidades.TabEndereco;
-import br.com.symples.modelo.entidades.TabEventos;
-import br.com.symples.modelo.entidades.TabParticipantes;
-import br.com.symples.service.ViacepService;
+import controller.service.ViacepService;
+import model.dao.DaoFactory;
+import model.dao.EnderecoDao;
+import model.dao.EventosDao;
+import model.entidades.TabEndereco;
+import model.entidades.TabEventos;
+import model.entidades.TabParticipantes;
 
 
 public class Eventos {
@@ -109,7 +111,7 @@ public class Eventos {
 	
 	
 	
-	public static void exibirEventos() {
+	public static void exibirEventos(DefaultTableModel dtmEventos) {
 		
 		EventosDao eventosDao = DaoFactory.createEventos();
 		
@@ -117,13 +119,19 @@ public class Eventos {
 		
 		for (TabEventos evento : listTabEventos) {
 				
-				System.out.println(
-						"Nº evento: " + evento.getIdEvento()
-						+ "\nNome: " + evento.getNomeEvento()
-						+ "\nData: " + evento.getDataEvento()
-						+ "\nHora: " + evento.getHoraEvento()
-						+ "\nLocal: " + evento.getCodigoEndereco().getLocalidade() + "/" + evento.getCodigoEndereco().getUf());
-						System.out.println("-----------");
+//				System.out.println(
+//						"Nº evento: " + evento.getIdEvento()
+//						+ "\nNome: " + evento.getNomeEvento()
+//						+ "\nData: " + evento.getDataEvento()
+//						+ "\nHora: " + evento.getHoraEvento()
+//						+ "\nLocal: " + evento.getCodigoEndereco().getLocalidade() + "/" + evento.getCodigoEndereco().getUf());
+//						System.out.println("-----------");
+			
+			Object[] dados = {evento.getIdEvento(), evento.getNomeEvento(), 
+					evento.getDataEvento(), evento.getHoraEvento(), 
+					evento.getCodigoEndereco().getLocalidade() + "/" + evento.getCodigoEndereco().getUf()
+					};
+			dtmEventos.addRow(dados);
 		
 		}
 		
@@ -156,7 +164,9 @@ public class Eventos {
 	
 	
 	
-	public void comprarIngresso(Integer codEvento, TabParticipantes novoParticipante) {
+	public boolean comprarIngresso(Integer codEvento, TabParticipantes novoParticipante) {
+		
+		boolean statusCompra = true;
 		
 		EventosDao eventoDao = DaoFactory.createEventos();
 		TabEventos tabEventos = new TabEventos();
@@ -178,13 +188,12 @@ public class Eventos {
 			System.out.println("Qtd disponível: " + (tabEventos.getIngressos() - tabEventos.getIngressoComprado()));
 			
 		} else {
+			statusCompra = false;
 			System.out.println(" --- INGRESSO ESGOTADO! --- ");	
-			}	
+			}
+		
+		return statusCompra;	
 
-	}
-	
-	public static void main(String[] args) {
-		exibirEventos();
 	}
 
 	
